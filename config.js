@@ -1,0 +1,5 @@
+// 환경변수 설정
+window.ENV = {
+  API_URL: "API_URL_PLACEHOLDER",
+  KAKAO_APP_KEY: "KAKAO_APP_KEY_PLACEHOLDER",
+};

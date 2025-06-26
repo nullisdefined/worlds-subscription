@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worlds Subscription - 구독형 단어 학습</title>
+    <script>
+        const currentHost = window.location.hostname;
+        if (currentHost.includes("s3.amazonaws.com")) {
+          window.location.href = "https://d1ig2d1eh1xo3r.cloudfront.net";
+        }
+    </script>  
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // 환경에 따라 config 파일 로드
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            // 로컬 개발환경
+            document.write('<script src="config.local.js"><\/script>');
+        } else {
+            // 배포환경 (GitHub Pages)
+            document.write('<script src="config.js"><\/script>');
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <div class="logo-image">
+                    <img src="assets/logo.png" alt="Worlds Subscription Logo">
+                </div>
+                <h1>Worlds Subscription</h1>
+            </div>
+            <div class="nav-buttons">
+                <button id="loginBtn" class="btn btn-outline">로그인</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 히어로 섹션 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>전 세계 언어를<br>카카오톡으로 학습하세요</h1>
+            <p>매시간 새로운 영어, 중국어, 일본어 단어를 받아보고 자연스럽게 어휘력을 늘려보세요!</p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <span class="icon"><i data-lucide="clock"></i></span>
+                    <span>매시간 자동 전송</span>
+                </div>
+                <div class="hero-feature">
+                    <span class="icon"><i data-lucide="globe"></i></span>
+                    <span>3개 언어 지원</span>
+                </div>
+                <div class="hero-feature">
+                    <span class="icon"><i data-lucide="message-circle"></i></span>
+                    <span>카카오톡 연동</span>
+                </div>
+            </div>
+            <button id="subscribeBtn" class="btn btn-primary btn-large" onclick="scrollToLanguages()">
+                지금 시작하기
+            </button>
+        </div>
+    </section>
+
+    <!-- 언어 선택 섹션 -->
+    <section id="languages" class="language-selection">
+        <div class="language-content">
+            <h2 class="section-title">학습하고 싶은 언어를 선택하세요</h2>
+            <p class="section-subtitle">여러 언어를 동시에 선택할 수 있습니다. 각 언어별로 맞춤형 학습 콘텐츠를 제공해드려요!</p>
+            
+            <div class="language-options">
+                <div class="language-card selected" data-language="english">
+                    <img src="assets/us.png" alt="미국 국기" class="flag">
+                    <div class="name">English</div>
+                    <div class="desc">영어 단어 학습</div>
+                    <div class="sample">
+                        <strong>accomplish</strong>
+                        <div class="pronunciation">/əˈkʌmplɪʃ/</div>
+                        <div class="meaning">성취하다, 완수하다</div>
+                        <div class="example">"We accomplished our goal."</div>
+                    </div>
+                </div>
+                
+                <div class="language-card" data-language="chinese">
+                    <img src="assets/china.png" alt="중국 국기" class="flag">
+                    <div class="name">中文</div>
+                    <div class="desc">중국어 단어 학습</div>
+                    <div class="sample">
+                        <strong>成功</strong>
+                        <div class="pronunciation">chéng gōng</div>
+                        <div class="meaning">성공하다</div>
+                        <div class="example">"他很成功。" (그는 성공했다)</div>
+                    </div>
+                </div>
+                
+                <div class="language-card" data-language="japanese">
+                    <img src="assets/japan.png" alt="일본 국기" class="flag">
+                    <div class="name">日本語</div>
+                    <div class="desc">일본어 단어 학습</div>
+                    <div class="sample">
+                        <strong>勉強</strong>
+                        <div class="pronunciation">べんきょう</div>
+                        <div class="meaning">공부, 학습</div>
+                        <div class="example">"毎日勉強します。" (매일 공부합니다)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subscribe-section">
+                <button class="subscribe-btn" onclick="subscribeService()">
+                    📱 1개 언어 구독하기
+                </button>
+                <p class="subscribe-note">
+                    카카오톡 로그인 후 바로 시작해보세요.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 사용자 정보 (로그인 후 표시) -->
+    <section id="userInfo" class="user-info">
+        <div class="user-profile">
+            <img id="userProfile" class="profile-image" src="" alt="프로필">
+            <div class="user-details">
+                <h3 id="userName">사용자명</h3>
+                <p id="userEmail">이메일</p>
+            </div>
+        </div>
+        
+        <div class="subscription-info">
+            <div class="info-item">
+                <div class="info-label">구독 상태</div>
+                <div class="info-value" id="subscriptionStatus">활성</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">선택한 언어</div>
+                <div class="info-value" id="selectedLanguages">영어</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">구독 시작일</div>
+                <div class="info-value" id="subscriptionDate">2025-06-26</div>
+            </div>
+        </div>
+        
+        <div class="user-actions">
+            <button id="manageSubscription" class="btn btn-outline">구독 관리</button>
+            <button id="logoutBtn" class="btn btn-primary">로그아웃</button>
+        </div>
+    </section>
+
+    <!-- 결과 메시지 -->
+    <div id="result"></div>
+
+    <!-- 기능 소개 섹션 -->
+    <section class="features-section">
+        <div class="features-content">
+            <h2 class="section-title">어떤 혜택이 있나요?</h2>
+            <div class="features-intro">
+                <p>매일 받는 단어 하나가 만드는 놀라운 변화! 꾸준한 학습으로 어느새 늘어난 실력을 경험해보세요. 작은 습관이 큰 성과를 만듭니다.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <img src="assets/study.png" alt="맞춤형 학습" class="icon">
+                    <h3>맞춤형 학습</h3>
+                    <p>각 언어별 특성을 고려한 맞춤형 콘텐츠로 효과적인 학습이 가능합니다. 발음, 예문, 번역까지 완벽 제공!</p>
+                </div>
+                
+                <div class="feature-card">
+                    <img src="assets/accessibility.png" alt="편리한 접근성" class="icon">
+                    <h3>편리한 접근성</h3>
+                    <p>별도 앱 설치 없이 카카오톡으로 바로 받아보세요. 언제 어디서나 새로운 단어를 학습할 수 있어요.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <img src="assets/schedule.png" alt="꾸준한 학습 습관" class="icon">
+                    <h3>꾸준한 학습 습관</h3>
+                    <p>매시간 정시에 전송되는 단어로 자연스럽게 학습 습관을 만들어보세요. 부담 없는 분량으로 지속 가능한 학습!</p>
+                </div>
+                
+                <div class="feature-card">
+                    <img src="assets/acheivement.png" alt="체계적인 커리큘럼" class="icon">
+                    <h3>체계적인 커리큘럼</h3>
+                    <p>초급부터 고급까지 체계적으로 구성된 어휘로 단계별 실력 향상이 가능합니다.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <img src="assets/free.png" alt="완전 무료 서비스" class="icon">
+                    <h3>완전 무료 서비스</h3>
+                    <p>모든 기능을 무료로 제공합니다. 광고도 없고, 숨겨진 비용도 없어요. 순수하게 학습만 집중하세요!</p>
+                </div>
+                
+                <div class="feature-card">
+                    <img src="assets/changable.png" alt="언제든 변경 가능" class="icon">
+                    <h3>언제든 변경 가능</h3>
+                    <p>언어 선택을 언제든 변경하거나 구독을 중단할 수 있어요. 유연하고 자유로운 학습 환경을 제공합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 로그인 모달 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>로그인</h2>
+            <p>카카오 계정으로 간편하게 로그인하세요</p>
+            <button id="kakaoLoginBtn" class="btn btn-kakao">
+                <svg class="kakao-logo" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 01-1.727-.11l-4.408 2.883c-.501.265-.678.236-.472-.413l.892-3.678c-2.88-1.46-4.785-3.99-4.785-6.866C1.5 6.665 6.201 3 12 3z"/>
+                </svg>
+                카카오로 로그인
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
