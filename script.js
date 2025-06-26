@@ -1,7 +1,29 @@
-// 설정값들
-const API_URL = window.ENV?.API_URL;
-const KAKAO_APP_KEY = window.ENV?.KAKAO_APP_KEY;
-const REDIRECT_URI = window.location.origin + "/worlds-subscription/";
+// 환경 감지 및 설정값들
+const isLocalhost =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1";
+const isFileProtocol = window.location.protocol === "file:";
+
+// 환경별 설정
+let API_URL, REDIRECT_URI;
+
+if (isLocalhost || isFileProtocol) {
+  // 로컬 환경 (Live Server 사용)
+  API_URL =
+    "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod/subscribe";
+  REDIRECT_URI = "http://localhost:5500/"; // Live Server 포트
+  console.log("Development Environment");
+} else {
+  // 배포 환경
+  API_URL =
+    window.ENV?.API_URL ||
+    "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod/subscribe";
+  REDIRECT_URI = window.location.origin + "/worlds-subscription/";
+  console.log("Production Environment");
+}
+
+const KAKAO_APP_KEY =
+  window.ENV?.KAKAO_APP_KEY || "a5460d517f8aa1e9209b8fbcb0b5408f";
 
 let selectedLanguages = ["english"];
 let currentUser = null;
@@ -122,10 +144,19 @@ function subscribeService() {
 
 // 로그인 상태 확인 함수
 function checkLoginStatus() {
+  console.log("로그인 상태 확인 중...");
+
+  // 저장된 사용자 정보 복원
   const savedUser = localStorage.getItem("currentUser");
   if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-    updateUIForLoggedInUser();
+    try {
+      currentUser = JSON.parse(savedUser);
+      console.log("저장된 사용자 정보 복원:", currentUser);
+      updateUIForLoggedInUser();
+    } catch (e) {
+      console.error("저장된 사용자 정보 파싱 오류:", e);
+      localStorage.removeItem("currentUser");
+    }
   }
 
   // URL에서 인증 코드 확인
@@ -133,6 +164,8 @@ function checkLoginStatus() {
   const authCode = urlParams.get("code");
   const error = urlParams.get("error");
   const errorDescription = urlParams.get("error_description");
+
+  console.log("URL 파라미터:", { authCode, error, errorDescription });
 
   if (error) {
     console.error("Kakao OAuth Error:", error, errorDescription);
@@ -144,6 +177,9 @@ function checkLoginStatus() {
 
   if (authCode) {
     console.log("Authorization code received:", authCode);
+    console.log("현재 URL:", window.location.href);
+    console.log("REDIRECT_URI:", REDIRECT_URI);
+
     // 카카오 콜백 처리 중 로딩 표시
     showLoading();
     handleSubscriptionCallback(authCode);
@@ -293,14 +329,25 @@ function handleKakaoLogin() {
 function updateUIForLoggedInUser() {
   if (!currentUser) return;
 
-  // 네비게이션 업데이트
+  console.log("로그인된 사용자 UI 업데이트:", currentUser);
+
+  // 네비게이션 업데이트 - 로그인 버튼을 닉네임으로 변경
   if (loginBtn) {
-    loginBtn.style.display = "none";
+    loginBtn.textContent = `${currentUser.nickname}님`;
+    loginBtn.classList.remove("btn-outline");
+    loginBtn.classList.add("btn-primary");
+    loginBtn.onclick = () => {
+      const userInfoSection = document.getElementById("userInfo");
+      if (userInfoSection) {
+        userInfoSection.scrollIntoView({ behavior: "smooth" });
+      }
+    };
   }
 
   // 사용자 정보 표시
   if (userInfo) {
     userInfo.style.display = "block";
+    console.log("사용자 정보 섹션 표시됨");
   }
 
   const userNameEl = document.getElementById("userName");
@@ -311,7 +358,7 @@ function updateUIForLoggedInUser() {
   const subscriptionDateEl = document.getElementById("subscriptionDate");
 
   if (userNameEl) {
-    userNameEl.textContent = currentUser.nickname;
+    userNameEl.textContent = `${currentUser.nickname}님, 안녕하세요!`;
   }
 
   if (userEmailEl) {
@@ -327,7 +374,8 @@ function updateUIForLoggedInUser() {
 
   // 구독 정보 업데이트
   if (subscriptionStatusEl) {
-    subscriptionStatusEl.textContent = "활성";
+    subscriptionStatusEl.textContent = "✅ 활성";
+    subscriptionStatusEl.style.color = "#10b981";
   }
 
   if (
@@ -355,6 +403,17 @@ function updateUIForLoggedInUser() {
   const subscribeBtn = document.querySelector(".subscribe-btn");
   if (subscribeBtn) {
     subscribeBtn.innerHTML = "✨ 언어 설정 변경하기";
+  }
+
+  // 언어 카드 선택 상태 업데이트
+  if (currentUser.languages) {
+    currentUser.languages.forEach((lang) => {
+      const card = document.querySelector(`[data-language="${lang}"]`);
+      if (card) {
+        card.classList.add("selected");
+      }
+    });
+    updateSubscribeButton();
   }
 }
 
@@ -393,11 +452,23 @@ function handleLogout() {
 
     // UI 초기화
     if (loginBtn) {
-      loginBtn.style.display = "inline-flex";
+      loginBtn.textContent = "로그인";
+      loginBtn.classList.remove("btn-primary");
+      loginBtn.classList.add("btn-outline");
+      loginBtn.onclick = openLoginModal;
     }
     if (userInfo) {
       userInfo.style.display = "none";
     }
+
+    // 언어 카드 선택 초기화
+    document.querySelectorAll(".language-card").forEach((card) => {
+      card.classList.remove("selected");
+    });
+    document
+      .querySelector('[data-language="english"]')
+      ?.classList.add("selected");
+    selectedLanguages = ["english"];
 
     // 구독 버튼 복원
     updateSubscribeButton();
@@ -436,5 +507,24 @@ function showResult(message, type) {
 
     // 메시지 위치로 스크롤
     result.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+// 로딩 표시
+function showLoading() {
+  const result = document.getElementById("result");
+  if (result) {
+    result.innerHTML = '<div class="loading"></div>처리 중...';
+    result.className = "info loading";
+    result.style.display = "block";
+  }
+}
+
+// 로딩 숨김
+function hideLoading() {
+  const result = document.getElementById("result");
+  if (result && result.classList.contains("loading")) {
+    result.style.display = "none";
+    result.classList.remove("loading");
   }
 }

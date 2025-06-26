@@ -62,6 +62,37 @@
         </div>
     </section>
 
+    <!-- 사용자 정보 (로그인 후 표시) -->
+    <section id="userInfo" class="user-info">
+        <div class="user-profile">
+            <img id="userProfile" class="profile-image" src="" alt="프로필">
+            <div class="user-details">
+                <h3 id="userName">사용자명</h3>
+                <p id="userEmail">이메일</p>
+            </div>
+        </div>
+        
+        <div class="subscription-info">
+            <div class="info-item">
+                <div class="info-label">구독 상태</div>
+                <div class="info-value" id="subscriptionStatus">활성</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">선택한 언어</div>
+                <div class="info-value" id="selectedLanguages">영어</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">구독 시작일</div>
+                <div class="info-value" id="subscriptionDate">2025-06-26</div>
+            </div>
+        </div>
+        
+        <div class="user-actions">
+            <button id="manageSubscription" class="btn btn-outline">구독 관리</button>
+            <button id="logoutBtn" class="btn btn-primary">로그아웃</button>
+        </div>
+    </section>
+
     <!-- 언어 선택 섹션 -->
     <section id="languages" class="language-selection">
         <div class="language-content">
@@ -117,39 +148,23 @@
         </div>
     </section>
 
-    <!-- 사용자 정보 (로그인 후 표시) -->
-    <section id="userInfo" class="user-info">
-        <div class="user-profile">
-            <img id="userProfile" class="profile-image" src="" alt="프로필">
-            <div class="user-details">
-                <h3 id="userName">사용자명</h3>
-                <p id="userEmail">이메일</p>
-            </div>
-        </div>
-        
-        <div class="subscription-info">
-            <div class="info-item">
-                <div class="info-label">구독 상태</div>
-                <div class="info-value" id="subscriptionStatus">활성</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">선택한 언어</div>
-                <div class="info-value" id="selectedLanguages">영어</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">구독 시작일</div>
-                <div class="info-value" id="subscriptionDate">2025-06-26</div>
-            </div>
-        </div>
-        
-        <div class="user-actions">
-            <button id="manageSubscription" class="btn btn-outline">구독 관리</button>
-            <button id="logoutBtn" class="btn btn-primary">로그아웃</button>
-        </div>
-    </section>
-
     <!-- 결과 메시지 -->
     <div id="result"></div>
+
+    <!-- 로그인 모달 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>로그인</h2>
+            <p>카카오 계정으로 간편하게 로그인하세요</p>
+            <button id="kakaoLoginBtn" class="btn btn-kakao">
+                <svg class="kakao-logo" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 01-1.727-.11l-4.408 2.883c-.501.265-.678.236-.472-.413l.892-3.678c-2.88-1.46-4.785-3.99-4.785-6.866C1.5 6.665 6.201 3 12 3z"/>
+                </svg>
+                카카오로 로그인
+            </button>
+        </div>
+    </div>
 
     <!-- 기능 소개 섹션 -->
     <section class="features-section">
@@ -198,21 +213,6 @@
             </div>
         </div>
     </section>
-
-    <!-- 로그인 모달 -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>로그인</h2>
-            <p>카카오 계정으로 간편하게 로그인하세요</p>
-            <button id="kakaoLoginBtn" class="btn btn-kakao">
-                <svg class="kakao-logo" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 01-1.727-.11l-4.408 2.883c-.501.265-.678.236-.472-.413l.892-3.678c-2.88-1.46-4.785-3.99-4.785-6.866C1.5 6.665 6.201 3 12 3z"/>
-                </svg>
-                카카오로 로그인
-            </button>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
