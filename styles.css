@@ -79,7 +79,7 @@ body {
   gap: 8px;
   padding: 8px 16px;
   background: transparent;
-  border: 2px solid #667eea;
+  border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -88,8 +88,8 @@ body {
 }
 
 .user-menu-btn:hover {
-  background: #667eea;
-  color: white;
+  background: transparent;
+  color: #4c51bf;
 }
 
 .user-avatar {
@@ -437,6 +437,16 @@ body {
 .language-card.selected .sample {
   background: #f0f4ff;
   border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.language-card.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.language-card.disabled:hover {
+  transform: none;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
@@ -1065,12 +1075,34 @@ body {
 @media (max-width: 768px) {
   .nav {
     padding: 1rem;
-    flex-direction: column;
-    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo h1 {
+    font-size: 1.2rem;
+  }
+
+  .nav-buttons {
+    flex-shrink: 0;
+  }
+
+  .nav-buttons .btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .hero {
+    padding: 3rem 1rem;
   }
 
   .hero h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
   }
 
   .hero-features {
@@ -1079,13 +1111,46 @@ body {
     gap: 1rem;
   }
 
+  .hero-feature {
+    font-size: 0.9rem;
+  }
+
   .section-title {
-    font-size: 2rem;
+    font-size: 1.8rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
   }
 
   .language-options {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .language-card {
+    padding: 1.2rem;
+  }
+
+  .language-card .name {
+    font-size: 1.1rem;
+  }
+
+  .language-card .desc {
+    font-size: 0.8rem;
+  }
+
+  .language-card .sample {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+
+  .language-selection::before {
+    width: 200px;
+    height: 200px;
+    right: -10px;
+    bottom: -10px;
+    opacity: 0.8;
   }
 
   .features-grid {
@@ -1104,6 +1169,120 @@ body {
   .user-actions {
     flex-direction: column;
   }
+
+  /* 모바일/태블릿에서 모든 호버 효과 제거 */
+  .language-card:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+    background: white;
+    border-color: #e2e8f0;
+  }
+
+  .btn-large:hover {
+    transform: none;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .btn-large:hover::before {
+    left: -100%;
+  }
+
+  .feature-card:hover {
+    transform: none;
+    background: white;
+  }
+
+  .user-menu-btn:hover {
+    background: transparent;
+    color: #667eea;
+  }
+
+  .btn-primary:hover {
+    background: #667eea;
+    color: white;
+    transform: none;
+  }
+
+  .btn-outline:hover {
+    background: transparent;
+    color: #667eea;
+    transform: none;
+  }
+
+  .btn-kakao:hover {
+    background: #fee500;
+    color: #3c1e1e;
+    transform: none;
+  }
+
+  .channel-btn:hover {
+    background: #fee500;
+    color: #3c1e1e;
+    transform: none;
+  }
+
+  .subscribe-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: none;
+  }
+
+  .close-notification:hover {
+    background: transparent;
+    transform: none;
+  }
+
+  .message-close-btn:hover {
+    background: transparent;
+    transform: none;
+  }
+
+  .dropdown-item:hover {
+    background: transparent;
+  }
+
+  .close:hover {
+    color: inherit;
+    transform: none;
+  }
+
+  /* 모바일에서 모든 모달 애니메이션 제거 */
+  .channel-notification-modal .notification-content {
+    animation: none !important;
+  }
+
+  .message-modal .message-content {
+    animation: none !important;
+  }
+
+  .error-modal .error-content {
+    animation: none !important;
+  }
+
+  .processing-modal .processing-content {
+    animation: none !important;
+  }
+
+  .processing-spinner {
+    animation: none !important;
+  }
+
+  .notice-icon {
+    animation: none !important;
+  }
+
+  .error-icon {
+    animation: none !important;
+  }
+
+  .language-card,
+  .feature-card {
+    animation: none !important;
+  }
+
+  .loading::after {
+    animation: none !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1118,6 +1297,38 @@ body {
   .subscribe-btn {
     padding: 1rem 2rem;
     font-size: 1.1rem;
+  }
+
+  /* 소형 모바일에서 모든 호버 효과 완전 제거 */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .language-card:hover,
+  .btn-large:hover,
+  .feature-card:hover,
+  .user-menu-btn:hover,
+  .btn-primary:hover,
+  .btn-outline:hover,
+  .btn-kakao:hover,
+  .channel-btn:hover,
+  .subscribe-btn:hover,
+  .close-notification:hover,
+  .message-close-btn:hover,
+  .dropdown-item:hover,
+  .close:hover {
+    transform: none !important;
+    transition: none !important;
+    background: inherit !important;
+    color: inherit !important;
+    border-color: inherit !important;
+    box-shadow: inherit !important;
+  }
+
+  /* 소형 모바일에서 모든 애니메이션 완전 제거 */
+  * {
+    animation: none !important;
+    transition: none !important;
   }
 }
 
@@ -1176,30 +1387,142 @@ body {
   }
 }
 
+/* 태블릿에서도 모든 호버 효과 제거 */
+@media (max-width: 1024px) and (hover: none) {
+  .language-card:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+    background: white;
+    border-color: #e2e8f0;
+  }
+
+  .btn-large:hover {
+    transform: none;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .btn-large:hover::before {
+    left: -100%;
+  }
+
+  .feature-card:hover {
+    transform: none;
+    background: white;
+  }
+
+  .btn-primary:hover,
+  .btn-outline:hover,
+  .btn-kakao:hover,
+  .channel-btn:hover,
+  .subscribe-btn:hover,
+  .close-notification:hover,
+  .message-close-btn:hover,
+  .dropdown-item:hover,
+  .close:hover,
+  .user-menu-btn:hover {
+    background: inherit;
+    color: inherit;
+    transform: none;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 태블릿에서 모든 모달 애니메이션 제거 */
+  .channel-notification-modal .notification-content,
+  .message-modal .message-content,
+  .error-modal .error-content,
+  .processing-modal .processing-content,
+  .processing-spinner,
+  .notice-icon,
+  .error-icon,
+  .language-card,
+  .feature-card,
+  .loading::after {
+    animation: none !important;
+  }
+}
+
 /* 추가 모바일 반응형 스타일 */
 @media (max-width: 768px) {
   .notification-content {
-    padding: 1.5rem;
+    padding: 1.2rem;
     width: 95%;
+    max-width: 350px;
+  }
+
+  .notice-header strong {
+    font-size: 1rem;
+  }
+
+  .notice-content p {
+    font-size: 0.9rem;
   }
 
   .message-content {
-    padding: 1.5rem;
+    padding: 1.2rem;
     width: 95%;
+    max-width: 300px;
+  }
+
+  .message-text {
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .message-close-btn {
+    padding: 10px 20px;
+    font-size: 14px;
   }
 
   .error-content {
-    padding: 1.5rem;
+    padding: 1.2rem;
     width: 95%;
+    max-width: 300px;
+  }
+
+  .error-icon {
+    font-size: 1.5rem;
+  }
+
+  .error-text {
+    font-size: 1rem;
   }
 
   .processing-content {
-    padding: 1.5rem;
+    padding: 1.2rem;
     width: 95%;
+    max-width: 280px;
+  }
+
+  .processing-spinner {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.8rem;
+  }
+
+  .processing-text {
+    font-size: 1rem;
   }
 
   .channel-btn {
     width: 100%;
     justify-content: center;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .modal-content {
+    padding: 2rem 1.5rem;
+    margin: 20% auto;
+  }
+
+  .modal-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .modal-content p {
+    font-size: 0.9rem;
   }
 }

@@ -86,6 +86,12 @@ function setupLanguageCards() {
   // 언어 선택 처리
   document.querySelectorAll(".language-card").forEach((card) => {
     card.addEventListener("click", function () {
+      // 로그인된 상태이고 카드가 비활성화된 경우 클릭 무시
+      if (currentUser && this.classList.contains("disabled")) {
+        showMessageModal("언어 설정을 변경하려면 구독 관리 버튼을 눌러주세요.");
+        return;
+      }
+
       const language = this.dataset.language;
 
       if (this.classList.contains("selected")) {
@@ -152,8 +158,7 @@ function addKakaoChannel() {
   );
 
   if (!popup) {
-    // 팝업이 차단된 경우 안내
-    alert("팝업이 차단되었습니다. 팝업을 허용하고 다시 시도해주세요.");
+    // 팝업이 차단된 경우 바로 리턴
     return;
   }
 
@@ -188,17 +193,9 @@ function closeChannelNotification() {
   const modal = document.getElementById("channelNotificationModal");
   modal.classList.remove("show");
 
-  // 친구추가 확인 후 구독 진행
+  // 친구추가 완료 후 바로 구독 진행
   setTimeout(() => {
-    const confirmed = confirm(
-      "카카오톡 채널 @worlds_sub에 친구추가를 완료하셨나요?\n\n친구추가를 하지 않으면 구독 메시지를 받을 수 없습니다.\n\n친구추가를 완료했다면 '확인'을 눌러주세요."
-    );
-
-    if (confirmed) {
-      proceedWithSubscription();
-    } else {
-      showMessageModal("먼저 카카오톡 채널 친구추가를 완료해주세요.");
-    }
+    proceedWithSubscription();
   }, 300);
 }
 
@@ -265,6 +262,7 @@ function checkLoginStatus() {
       currentUser = JSON.parse(savedUser);
       console.log("저장된 사용자 정보 복원:", currentUser);
       updateUIForLoggedInUser();
+      return; // 로그인된 상태이면 OAuth 처리 건너뛰기
     } catch (e) {
       console.error("저장된 사용자 정보 파싱 오류:", e);
       localStorage.removeItem("currentUser");
@@ -366,7 +364,7 @@ function handleSubscriptionCallback(authCode) {
   }
 
   // 구독 처리 API 호출
-  showResult("구독 처리 중...", "info");
+  showResult("로그인 처리 중...", "info");
 
   const requestBody = {
     action: "subscribe",
@@ -526,7 +524,11 @@ function updateUIForLoggedInUser() {
     loginBtn.textContent = `${currentUser.nickname}님`;
     loginBtn.classList.remove("btn-outline");
     loginBtn.classList.add("btn-primary");
-    loginBtn.onclick = () => {
+    // 기존 이벤트 리스너 제거
+    loginBtn.removeEventListener("click", openLoginModal);
+    // 새로운 이벤트 리스너 추가
+    loginBtn.onclick = (e) => {
+      e.preventDefault();
       const userInfoSection = document.getElementById("userInfo");
       if (userInfoSection) {
         userInfoSection.scrollIntoView({ behavior: "smooth" });
@@ -595,76 +597,86 @@ function updateUIForLoggedInUser() {
     subscribeBtn.innerHTML = "✨ 언어 설정 변경하기";
   }
 
-  // 언어 카드 선택 상태 업데이트
+  // 언어 카드를 사용자의 구독 언어로 설정하고 비활성화
   if (currentUser.languages) {
+    // 모든 카드 초기화
+    document.querySelectorAll(".language-card").forEach((card) => {
+      card.classList.remove("selected");
+      card.classList.add("disabled");
+    });
+
+    // 사용자 구독 언어만 선택 상태로 설정
     currentUser.languages.forEach((lang) => {
       const card = document.querySelector(`[data-language="${lang}"]`);
       if (card) {
         card.classList.add("selected");
       }
     });
+
+    // selectedLanguages 배열도 업데이트
+    selectedLanguages = [...currentUser.languages];
     updateSubscribeButton();
   }
 }
 
 // 구독 관리
 function showSubscriptionManagement() {
-  const options = [
-    "• 언어 선택 변경",
-    "• 구독 일시정지",
-    "• 구독 완전 해지",
-    "• 알림 시간 설정",
-  ];
+  // 언어 카드 활성화
+  enableLanguageSelection();
 
-  if (
-    confirm(
-      `구독 관리 옵션:\n\n${options.join(
-        "\n"
-      )}\n\n변경사항이 있으시면 확인을 눌러주세요.`
-    )
-  ) {
-    showResult(
-      "구독 설정을 변경하시려면 언어를 다시 선택하고 구독하기를 눌러주세요.",
-      "info"
-    );
-    const languagesSection = document.getElementById("languages");
-    if (languagesSection) {
-      languagesSection.scrollIntoView({ behavior: "smooth" });
-    }
+  // 언어 선택 섹션으로 스크롤
+  const languagesSection = document.getElementById("languages");
+  if (languagesSection) {
+    languagesSection.scrollIntoView({ behavior: "smooth" });
+  }
+
+  showMessageModal("언어를 다시 선택하고 구독하기 버튼을 눌러주세요.");
+}
+
+// 언어 선택 활성화
+function enableLanguageSelection() {
+  document.querySelectorAll(".language-card").forEach((card) => {
+    card.classList.remove("disabled");
+  });
+
+  // 구독 버튼 텍스트 변경
+  const subscribeBtn = document.querySelector(".subscribe-btn");
+  if (subscribeBtn) {
+    subscribeBtn.innerHTML = "📱 언어 설정 변경하기";
   }
 }
 
 // 로그아웃
 function handleLogout() {
-  if (confirm("로그아웃하시겠습니까?")) {
-    localStorage.removeItem("currentUser");
-    currentUser = null;
+  localStorage.removeItem("currentUser");
+  currentUser = null;
 
-    // UI 초기화
-    if (loginBtn) {
-      loginBtn.textContent = "로그인";
-      loginBtn.classList.remove("btn-primary");
-      loginBtn.classList.add("btn-outline");
-      loginBtn.onclick = openLoginModal;
-    }
-    if (userInfo) {
-      userInfo.style.display = "none";
-    }
-
-    // 언어 카드 선택 초기화
-    document.querySelectorAll(".language-card").forEach((card) => {
-      card.classList.remove("selected");
-    });
-    document
-      .querySelector('[data-language="english"]')
-      ?.classList.add("selected");
-    selectedLanguages = ["english"];
-
-    // 구독 버튼 복원
-    updateSubscribeButton();
-
-    showResult("로그아웃되었습니다.", "info");
+  // UI 초기화
+  if (loginBtn) {
+    loginBtn.textContent = "로그인";
+    loginBtn.classList.remove("btn-primary");
+    loginBtn.classList.add("btn-outline");
+    // 기존 onclick 제거하고 이벤트 리스너로 다시 설정
+    loginBtn.onclick = null;
+    loginBtn.addEventListener("click", openLoginModal);
   }
+  if (userInfo) {
+    userInfo.style.display = "none";
+  }
+
+  // 언어 카드 선택 초기화
+  document.querySelectorAll(".language-card").forEach((card) => {
+    card.classList.remove("selected", "disabled");
+  });
+  document
+    .querySelector('[data-language="english"]')
+    ?.classList.add("selected");
+  selectedLanguages = ["english"];
+
+  // 구독 버튼 복원
+  updateSubscribeButton();
+
+  showResult("로그아웃되었습니다.", "info");
 }
 
 // 모달 관련
@@ -691,7 +703,9 @@ function showResult(message, type) {
   // info 타입이고 "처리 중" 관련 메시지인 경우 처리중 모달 사용
   if (
     type === "info" &&
-    (message.includes("처리 중") || message.includes("구독 처리"))
+    (message.includes("처리 중") ||
+      message.includes("구독 처리") ||
+      message.includes("로그인"))
   ) {
     showProcessingModal(message);
     return;
