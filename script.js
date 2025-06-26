@@ -19,7 +19,7 @@ if (isLocalhost || isFileProtocol) {
     window.ENV?.API_URL ||
     "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod/subscribe";
   REDIRECT_URI = window.location.origin + "/worlds-subscription/";
-  console.log("Production Environment");
+  //   console.log("Production Environment");
 }
 
 const KAKAO_APP_KEY =
@@ -240,9 +240,15 @@ function handleSubscriptionCallback(authCode) {
     action: "subscribe",
     code: authCode,
     languages: selectedLanguages,
+    redirect_uri: REDIRECT_URI, // 리다이렉트 URI도 함께 전송
   };
 
   console.log("Sending subscription request:", requestBody);
+  console.log("API_URL:", API_URL);
+  console.log("Headers:", {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  });
 
   fetch(API_URL, {
     method: "POST",
@@ -252,11 +258,16 @@ function handleSubscriptionCallback(authCode) {
     },
     body: JSON.stringify(requestBody),
   })
-    .then((response) => {
+    .then(async (response) => {
       console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error("Error response body:", errorText);
+        throw new Error(
+          `HTTP ${response.status}: ${response.statusText} - ${errorText}`
+        );
       }
       return response.json();
     })
@@ -317,7 +328,7 @@ function handleSubscriptionCallback(authCode) {
     });
 }
 
-// 카카오 로그인 (구독이 아닌 단순 로그인)
+// 카카오 로그인
 function handleKakaoLogin() {
   const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_APP_KEY}&redirect_uri=${encodeURIComponent(
     REDIRECT_URI

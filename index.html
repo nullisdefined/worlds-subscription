@@ -33,6 +33,19 @@
             </div>
             <div class="nav-buttons">
                 <button id="loginBtn" class="btn btn-outline">로그인</button>
+                <div id="userDropdown" class="user-dropdown" style="display: none;">
+                    <button id="userMenuBtn" class="user-menu-btn">
+                        <img id="userAvatar" class="user-avatar" src="" alt="프로필">
+                        <span id="userNickname"></span>
+                        <i data-lucide="chevron-down"></i>
+                    </button>
+                    <div id="dropdownMenu" class="dropdown-menu">
+                        <button id="logoutBtn" class="dropdown-item">
+                            <i data-lucide="log-out"></i>
+                            로그아웃
+                        </button>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -89,7 +102,6 @@
         
         <div class="user-actions">
             <button id="manageSubscription" class="btn btn-outline">구독 관리</button>
-            <button id="logoutBtn" class="btn btn-primary">로그아웃</button>
         </div>
     </section>
 
