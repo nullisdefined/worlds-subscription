@@ -1,7 +1,7 @@
 // 설정값들
 const API_URL = window.ENV?.API_URL;
 const KAKAO_APP_KEY = window.ENV?.KAKAO_APP_KEY;
-const REDIRECT_URI = window.location.origin + "/callback.html";
+const REDIRECT_URI = window.location.origin + "/";
 
 let selectedLanguages = ["english"];
 let currentUser = null;
@@ -144,6 +144,8 @@ function checkLoginStatus() {
 
   if (authCode) {
     console.log("Authorization code received:", authCode);
+    // 카카오 콜백 처리 중 로딩 표시
+    showLoading();
     handleSubscriptionCallback(authCode);
   }
 }
@@ -225,6 +227,9 @@ function handleSubscriptionCallback(authCode) {
     .then((data) => {
       console.log("Subscription response:", data);
 
+      // 로딩 해제
+      hideLoading();
+
       if (data.success) {
         // 사용자 정보 저장
         const userData = {
@@ -265,6 +270,10 @@ function handleSubscriptionCallback(authCode) {
     })
     .catch((error) => {
       console.error("Subscription error:", error);
+
+      // 로딩 해제
+      hideLoading();
+
       showResult("오류 발생: " + error.message, "error");
 
       // URL 정리
