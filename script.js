@@ -1,9 +1,7 @@
 // 설정값들
 const API_URL = window.ENV?.API_URL;
 const KAKAO_APP_KEY = window.ENV?.KAKAO_APP_KEY;
-const REDIRECT_URI = window.location.origin + "/";
-
-console.log("사용할 REDIRECT_URI:", REDIRECT_URI);
+const REDIRECT_URI = window.location.origin + "/callback.html";
 
 let selectedLanguages = ["english"];
 let currentUser = null;
