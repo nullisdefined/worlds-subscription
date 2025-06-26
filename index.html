@@ -12,17 +12,13 @@
     </script>  
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="styles.css">
-    <script>
-        // 환경에 따라 config 파일 로드
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            // 로컬 개발환경
-            document.write('<script src="config.local.js"><\/script>');
-        } else {
-            // 배포환경 (GitHub Pages)
-            document.write('<script src="config.js"><\/script>');
-        }
-    </script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        window.ENV = {
+          API_URL: 'https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod/subscribe',
+          KAKAO_APP_KEY: '355a39ee2207bc1caa04f5e092e0e7a6'
+        };
+      </script>
 
 </head>
 <body>

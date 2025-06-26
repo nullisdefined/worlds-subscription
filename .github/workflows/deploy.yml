@@ -27,16 +27,6 @@ jobs:
       - name: 코드 체크아웃
         uses: actions/checkout@v4
 
-      - name: 환경변수 설정
-        env:
-          API_URL: ${{ secrets.API_URL }}
-          KAKAO_APP_KEY: ${{ secrets.KAKAO_APP_KEY }}
-        run: |
-          # config.js 파일에 실제 시크릿 값 주입
-          sed -i "s|API_URL_PLACEHOLDER|${API_URL}|g" config.js
-          sed -i "s|KAKAO_APP_KEY_PLACEHOLDER|${KAKAO_APP_KEY}|g" config.js
-          echo "환경변수가 설정되었습니다."
-
       - name: GitHub Pages 설정
         uses: actions/configure-pages@v4
 
