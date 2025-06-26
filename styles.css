@@ -838,6 +838,15 @@ body {
   box-shadow: none;
 }
 
+.subscribe-btn.disabled {
+  background: #cbd5e0 !important;
+  color: #a0aec0 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
 .subscribe-note {
   margin-top: 1rem;
   color: #666;

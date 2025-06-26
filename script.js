@@ -5,20 +5,22 @@ const isLocalhost =
 const isFileProtocol = window.location.protocol === "file:";
 
 // 환경별 설정
-let API_URL, REDIRECT_URI;
+let API_BASE_URL, API_URL, REDIRECT_URI;
 
 if (isLocalhost || isFileProtocol) {
   // 로컬 환경 (Live Server 사용)
-  API_URL =
-    "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod/subscribe";
+  API_BASE_URL =
+    "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod";
+  API_URL = API_BASE_URL + "/subscribe";
   REDIRECT_URI = "http://localhost:5500/"; // Live Server 포트
   console.log("Development Environment");
 } else {
   // 배포 환경
-  API_URL =
-    window.ENV?.API_URL ||
-    "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod/subscribe";
-  REDIRECT_URI = window.location.origin + "/worlds-subscription/";
+  API_BASE_URL =
+    window.ENV?.API_BASE_URL ||
+    "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod";
+  API_URL = API_BASE_URL + "/subscribe";
+  REDIRECT_URI = window.location.origin + "/words-subscription/";
   //   console.log("Production Environment");
 }
 
@@ -79,6 +81,12 @@ function setupEventListeners() {
   const manageBtn = document.getElementById("manageSubscription");
   if (manageBtn) {
     manageBtn.addEventListener("click", showSubscriptionManagement);
+  }
+
+  // 구독 취소
+  const unsubscribeBtn = document.getElementById("unsubscribeBtn");
+  if (unsubscribeBtn) {
+    unsubscribeBtn.addEventListener("click", handleUnsubscribe);
   }
 }
 
@@ -514,10 +522,24 @@ function handleKakaoLogin() {
 }
 
 // 로그인된 사용자 UI 업데이트
-function updateUIForLoggedInUser() {
+async function updateUIForLoggedInUser() {
   if (!currentUser) return;
 
   console.log("로그인된 사용자 UI 업데이트:", currentUser);
+
+  // API에서 최신 사용자 정보 가져오기
+  if (currentUser.user_id) {
+    try {
+      const latestUserInfo = await getUserInfo(currentUser.user_id);
+      // 현재 사용자 정보를 API 응답으로 업데이트
+      currentUser = { ...currentUser, ...latestUserInfo };
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      console.log("API에서 가져온 최신 사용자 정보:", latestUserInfo);
+    } catch (error) {
+      console.warn("사용자 정보 조회 실패, 저장된 정보 사용:", error);
+      // API 실패시에도 저장된 정보로 계속 진행
+    }
+  }
 
   // 네비게이션 업데이트 - 로그인 버튼을 닉네임으로 변경
   if (loginBtn) {
@@ -554,7 +576,16 @@ function updateUIForLoggedInUser() {
   }
 
   if (userEmailEl) {
-    userEmailEl.textContent = currentUser.email || "이메일 정보 없음";
+    // 함께한 기간 계산 (subscriptionDate 기준)
+    if (currentUser.subscriptionDate) {
+      const subscriptionDate = new Date(currentUser.subscriptionDate);
+      const today = new Date();
+      const diffTime = Math.abs(today - subscriptionDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      userEmailEl.textContent = `함께한 지 ${diffDays}일째 🎉`;
+    } else {
+      userEmailEl.textContent = "함께한 지 1일째 🎉";
+    }
   }
 
   // 프로필 이미지 (기본 이미지 사용)
@@ -591,10 +622,14 @@ function updateUIForLoggedInUser() {
     subscriptionDateEl.textContent = date.toLocaleDateString("ko-KR");
   }
 
-  // 구독 버튼 텍스트 변경
+  // 구독 버튼 비활성화 및 텍스트 변경
   const subscribeBtn = document.querySelector(".subscribe-btn");
   if (subscribeBtn) {
-    subscribeBtn.innerHTML = "✨ 언어 설정 변경하기";
+    subscribeBtn.innerHTML = "구독 관리에서 언어를 변경하세요";
+    subscribeBtn.classList.add("disabled");
+    subscribeBtn.onclick = () => {
+      showMessageModal("구독 관리 버튼을 통해 언어를 변경할 수 있습니다.");
+    };
   }
 
   // 언어 카드를 사용자의 구독 언어로 설정하고 비활성화
@@ -639,10 +674,12 @@ function enableLanguageSelection() {
     card.classList.remove("disabled");
   });
 
-  // 구독 버튼 텍스트 변경
+  // 구독 버튼 활성화 및 텍스트 변경
   const subscribeBtn = document.querySelector(".subscribe-btn");
   if (subscribeBtn) {
     subscribeBtn.innerHTML = "📱 언어 설정 변경하기";
+    subscribeBtn.classList.remove("disabled");
+    subscribeBtn.onclick = subscribeService;
   }
 }
 
@@ -674,6 +711,11 @@ function handleLogout() {
   selectedLanguages = ["english"];
 
   // 구독 버튼 복원
+  const subscribeBtn = document.querySelector(".subscribe-btn");
+  if (subscribeBtn) {
+    subscribeBtn.classList.remove("disabled");
+    subscribeBtn.onclick = subscribeService;
+  }
   updateSubscribeButton();
 
   showResult("로그아웃되었습니다.", "info");
@@ -736,4 +778,150 @@ function showLoading() {
 // 로딩 숨김
 function hideLoading() {
   hideProcessingModal();
+}
+
+// API 함수들
+async function getUserInfo(userId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/user/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error("사용자를 찾을 수 없습니다");
+      }
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log("API 응답 데이터:", data);
+    return data;
+  } catch (error) {
+    console.error("사용자 정보 조회 실패:", error);
+    throw error;
+  }
+}
+
+async function unsubscribeUser(userId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/unsubscribe`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("구독 취소 실패:", error);
+    throw error;
+  }
+}
+
+// 구독 취소 처리
+async function handleUnsubscribe() {
+  if (!currentUser || !currentUser.user_id) {
+    showErrorModal("사용자 정보가 없습니다.");
+    return;
+  }
+
+  // 구독 취소 확인 모달 표시
+  showMessageModal(
+    "정말로 구독을 취소하시겠습니까? 더 이상 단어 알림을 받을 수 없습니다."
+  );
+
+  // 메시지 모달의 확인 버튼을 구독 취소 확인으로 변경
+  const messageModal = document.getElementById("messageModal");
+  const closeBtn = messageModal.querySelector(".message-close-btn");
+
+  // 기존 이벤트 제거
+  const newCloseBtn = closeBtn.cloneNode(true);
+  closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+
+  newCloseBtn.textContent = "구독 취소";
+  newCloseBtn.style.background = "#e53e3e";
+  newCloseBtn.style.color = "white";
+
+  newCloseBtn.onclick = async () => {
+    closeMessageModal();
+
+    try {
+      showProcessingModal("구독 취소 중...");
+
+      await unsubscribeUser(currentUser.user_id);
+
+      hideProcessingModal();
+
+      // 로그아웃 처리
+      handleLogout();
+
+      showResult(
+        "구독이 취소되었습니다. 언제든 다시 구독할 수 있습니다.",
+        "info"
+      );
+    } catch (error) {
+      hideProcessingModal();
+
+      // 사용자 친화적 에러 메시지
+      let userMessage = "구독 취소 중 오류가 발생했습니다.";
+
+      if (error.message.includes("400")) {
+        userMessage = "잘못된 요청입니다. 다시 시도해주세요.";
+      } else if (error.message.includes("404")) {
+        userMessage = "사용자를 찾을 수 없습니다.";
+      } else if (error.message.includes("500")) {
+        userMessage =
+          "서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+      } else if (error.message.includes("Failed to fetch")) {
+        userMessage = "인터넷 연결을 확인하고 다시 시도해주세요.";
+      }
+
+      showErrorModal(userMessage);
+    }
+  };
+
+  // 취소 버튼 추가
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "취소";
+  cancelBtn.className = "message-close-btn";
+  cancelBtn.style.background = "#f3f4f6";
+  cancelBtn.style.color = "#374151";
+  cancelBtn.style.marginRight = "10px";
+  cancelBtn.onclick = () => {
+    closeMessageModal();
+    // 원래 모달로 복원
+    restoreMessageModal();
+  };
+
+  newCloseBtn.parentNode.insertBefore(cancelBtn, newCloseBtn);
+}
+
+// 메시지 모달 원래 상태로 복원
+function restoreMessageModal() {
+  const messageModal = document.getElementById("messageModal");
+  const messageContent = messageModal.querySelector(".message-content");
+
+  // 기존 버튼들 제거
+  const buttons = messageContent.querySelectorAll(".message-close-btn");
+  buttons.forEach((btn) => btn.remove());
+
+  // 원래 확인 버튼 복원
+  const confirmBtn = document.createElement("button");
+  confirmBtn.className = "message-close-btn";
+  confirmBtn.textContent = "확인";
+  confirmBtn.onclick = closeMessageModal;
+
+  messageContent.appendChild(confirmBtn);
 }
