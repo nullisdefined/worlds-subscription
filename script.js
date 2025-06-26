@@ -61,6 +61,18 @@ function setupEventListeners() {
     if (e.target === loginModal) {
       closeLoginModal();
     }
+
+    // 채널 알림 모달 배경 클릭 시 닫기
+    const channelModal = document.getElementById("channelNotificationModal");
+    if (e.target === channelModal) {
+      closeChannelNotification();
+    }
+
+    // 안내 메시지 모달 배경 클릭 시 닫기
+    const messageModal = document.getElementById("messageModal");
+    if (e.target === messageModal) {
+      closeMessageModal();
+    }
   });
 
   // 구독 관리
@@ -127,12 +139,112 @@ function scrollToLanguages() {
   }
 }
 
+// 카카오톡 채널 친구추가
+function addKakaoChannel() {
+  // 카카오톡 채널 친구추가 URL
+  const channelUrl = "http://pf.kakao.com/_xnzTxin/friend";
+
+  // 새 창으로 채널 페이지 열기
+  const popup = window.open(
+    channelUrl,
+    "kakaoChannel",
+    "width=400,height=500,scrollbars=yes"
+  );
+
+  if (!popup) {
+    // 팝업이 차단된 경우 안내
+    alert("팝업이 차단되었습니다. 팝업을 허용하고 다시 시도해주세요.");
+    return;
+  }
+
+  // 팝업 닫힘 감지 (친구추가 완료 후)
+  const checkClosed = setInterval(() => {
+    if (popup.closed) {
+      clearInterval(checkClosed);
+      // 친구추가 완료 후 모달 닫기
+      closeChannelNotification();
+    }
+  }, 1000);
+}
+
 function subscribeService() {
   if (selectedLanguages.length === 0) {
     showResult("언어를 최소 1개 이상 선택해주세요!", "error");
     return;
   }
 
+  // 채널 친구추가 알림 모달 표시
+  showChannelNotification();
+}
+
+// 채널 알림 모달 표시
+function showChannelNotification() {
+  const modal = document.getElementById("channelNotificationModal");
+  modal.classList.add("show");
+}
+
+// 채널 알림 모달 닫기
+function closeChannelNotification() {
+  const modal = document.getElementById("channelNotificationModal");
+  modal.classList.remove("show");
+
+  // 친구추가 확인 후 구독 진행
+  setTimeout(() => {
+    const confirmed = confirm(
+      "카카오톡 채널 @worlds_sub에 친구추가를 완료하셨나요?\n\n친구추가를 하지 않으면 구독 메시지를 받을 수 없습니다.\n\n친구추가를 완료했다면 '확인'을 눌러주세요."
+    );
+
+    if (confirmed) {
+      proceedWithSubscription();
+    } else {
+      showMessageModal("먼저 카카오톡 채널 친구추가를 완료해주세요.");
+    }
+  }, 300);
+}
+
+// 안내 메시지 모달 표시
+function showMessageModal(message) {
+  const modal = document.getElementById("messageModal");
+  const messageText = document.getElementById("messageText");
+  messageText.textContent = message;
+  modal.classList.add("show");
+}
+
+// 안내 메시지 모달 닫기
+function closeMessageModal() {
+  const modal = document.getElementById("messageModal");
+  modal.classList.remove("show");
+}
+
+// 에러 모달 표시 (자동으로 사라짐)
+function showErrorModal(message) {
+  const modal = document.getElementById("errorModal");
+  const errorText = document.getElementById("errorText");
+  errorText.textContent = message;
+  modal.classList.add("show");
+
+  // 3.5초 후 자동으로 모달 닫기
+  setTimeout(() => {
+    modal.classList.remove("show");
+  }, 3500);
+}
+
+// 처리중 모달 표시
+function showProcessingModal(message = "처리 중...") {
+  const modal = document.getElementById("processingModal");
+  const processingText = document.getElementById("processingText");
+  processingText.textContent = message;
+  modal.classList.add("show");
+}
+
+// 처리중 모달 닫기
+function hideProcessingModal() {
+  const modal = document.getElementById("processingModal");
+  modal.classList.remove("show");
+}
+
+// 구독 진행
+function proceedWithSubscription() {
   if (!currentUser) {
     openLoginModal();
     return;
@@ -169,7 +281,24 @@ function checkLoginStatus() {
 
   if (error) {
     console.error("Kakao OAuth Error:", error, errorDescription);
-    showResult(`로그인 실패: ${errorDescription || error}`, "error");
+
+    // 카카오 OAuth 에러를 사용자 친화적으로 변환
+    let userMessage = "로그인 중 오류가 발생했습니다.";
+
+    if (error === "access_denied") {
+      userMessage = "로그인이 취소되었습니다.";
+    } else if (error === "invalid_request") {
+      userMessage = "잘못된 로그인 요청입니다. 다시 시도해주세요.";
+    } else if (error === "server_error") {
+      userMessage =
+        "카카오 서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+    } else if (errorDescription && errorDescription.includes("Redirect URI")) {
+      userMessage = "페이지 설정에 문제가 있습니다. 관리자에게 문의해주세요.";
+    } else {
+      userMessage = "카카오 로그인에 실패했습니다. 다시 시도해주세요.";
+    }
+
+    showResult(userMessage, "error");
     // URL 정리
     window.history.replaceState({}, document.title, window.location.pathname);
     return;
@@ -216,7 +345,10 @@ function handleSubscriptionCallback(authCode) {
   const savedState = sessionStorage.getItem("kakao_state");
 
   if (returnedState !== savedState) {
-    showResult("보안 검증 실패. 다시 시도해주세요.", "error");
+    showResult(
+      "로그인 보안 검증에 실패했습니다. 처음부터 다시 시도해주세요.",
+      "error"
+    );
     window.history.replaceState({}, document.title, window.location.pathname);
     return;
   }
@@ -265,9 +397,25 @@ function handleSubscriptionCallback(authCode) {
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Error response body:", errorText);
-        throw new Error(
-          `HTTP ${response.status}: ${response.statusText} - ${errorText}`
-        );
+
+        // 사용자 친화적인 에러 메시지 생성
+        let userMessage = "구독 처리 중 오류가 발생했습니다.";
+
+        if (response.status === 400) {
+          userMessage = "잘못된 요청입니다. 다시 시도해주세요.";
+        } else if (response.status === 401) {
+          userMessage =
+            "카카오 로그인 인증에 실패했습니다. 다시 로그인해주세요.";
+        } else if (response.status === 403) {
+          userMessage = "접근 권한이 없습니다. 잠시 후 다시 시도해주세요.";
+        } else if (response.status === 500) {
+          userMessage =
+            "서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        } else if (response.status >= 500) {
+          userMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        }
+
+        throw new Error(userMessage);
       }
       return response.json();
     })
@@ -312,7 +460,25 @@ function handleSubscriptionCallback(authCode) {
           }
         }, 1000);
       } else {
-        showResult("구독 실패: " + (data.error || "알 수 없는 오류"), "error");
+        // 서버에서 받은 에러 메시지를 사용자 친화적으로 변환
+        let errorMessage = "구독 처리에 실패했습니다.";
+
+        if (data.error) {
+          const error = data.error.toLowerCase();
+          if (error.includes("token") || error.includes("access")) {
+            errorMessage =
+              "카카오 로그인 정보가 만료되었습니다. 다시 로그인해주세요.";
+          } else if (error.includes("invalid") || error.includes("failed")) {
+            errorMessage = "입력 정보가 올바르지 않습니다. 다시 시도해주세요.";
+          } else if (error.includes("duplicate") || error.includes("already")) {
+            errorMessage = "이미 구독되어 있습니다.";
+          } else {
+            errorMessage =
+              "구독 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+          }
+        }
+
+        showResult(errorMessage, "error");
       }
     })
     .catch((error) => {
@@ -321,7 +487,20 @@ function handleSubscriptionCallback(authCode) {
       // 로딩 해제
       hideLoading();
 
-      showResult("오류 발생: " + error.message, "error");
+      // 네트워크 오류나 기타 예외 처리
+      let errorMessage = error.message;
+
+      // 네트워크 오류 처리
+      if (
+        error.message.includes("Failed to fetch") ||
+        error.message.includes("NetworkError")
+      ) {
+        errorMessage = "인터넷 연결을 확인하고 다시 시도해주세요.";
+      } else if (error.message.includes("timeout")) {
+        errorMessage = "요청 시간이 초과되었습니다. 다시 시도해주세요.";
+      }
+
+      showResult(errorMessage, "error");
 
       // URL 정리
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -503,18 +682,32 @@ function closeLoginModal() {
 
 // 결과 메시지 표시
 function showResult(message, type) {
+  // 에러 타입인 경우 에러 모달 사용
+  if (type === "error") {
+    showErrorModal(message);
+    return;
+  }
+
+  // info 타입이고 "처리 중" 관련 메시지인 경우 처리중 모달 사용
+  if (
+    type === "info" &&
+    (message.includes("처리 중") || message.includes("구독 처리"))
+  ) {
+    showProcessingModal(message);
+    return;
+  }
+
+  // 기존 방식 유지 (success 등)
   const result = document.getElementById("result");
   if (result) {
     result.textContent = message;
     result.className = type;
     result.style.display = "block";
 
-    // 자동 숨김 (에러가 아닌 경우)
-    if (type !== "error") {
-      setTimeout(() => {
-        result.style.display = "none";
-      }, 5000);
-    }
+    // 자동 숨김
+    setTimeout(() => {
+      result.style.display = "none";
+    }, 5000);
 
     // 메시지 위치로 스크롤
     result.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -523,19 +716,10 @@ function showResult(message, type) {
 
 // 로딩 표시
 function showLoading() {
-  const result = document.getElementById("result");
-  if (result) {
-    result.innerHTML = '<div class="loading"></div>처리 중...';
-    result.className = "info loading";
-    result.style.display = "block";
-  }
+  showProcessingModal("처리 중...");
 }
 
 // 로딩 숨김
 function hideLoading() {
-  const result = document.getElementById("result");
-  if (result && result.classList.contains("loading")) {
-    result.style.display = "none";
-    result.classList.remove("loading");
-  }
+  hideProcessingModal();
 }

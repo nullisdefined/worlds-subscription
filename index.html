@@ -153,9 +153,51 @@
                 <button class="subscribe-btn" onclick="subscribeService()">
                     📱 1개 언어 구독하기
                 </button>
-                <p class="subscribe-note">
-                    카카오톡 로그인 후 바로 시작해보세요.
-                </p>
+            </div>
+            
+            <!-- 채널 친구추가 알림 모달 -->
+            <div id="channelNotificationModal" class="channel-notification-modal">
+                <div class="notification-content">
+                    <button class="close-notification" onclick="closeChannelNotification()">&times;</button>
+                    <div class="notice-header">
+                        <span class="notice-icon">📢</span>
+                        <strong>구독하기 전에 꼭 확인하세요!</strong>
+                    </div>
+                    <div class="notice-content">
+                        <p>구독 메시지를 받으려면 <strong>카카오톡 채널 친구추가</strong>가 필요합니다.</p>
+                        <p class="notice-sub">친구추가를 하지 않으면 메시지를 받을 수 없어요.</p>
+                        <div class="channel-add-section">
+                            <button class="channel-btn" onclick="addKakaoChannel()">
+                                <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" alt="카카오톡" class="kakao-channel-logo">
+                                @worlds_sub 친구추가
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 안내 메시지 모달 -->
+            <div id="messageModal" class="message-modal">
+                <div class="message-content">
+                    <div class="message-text" id="messageText"></div>
+                    <button class="message-close-btn" onclick="closeMessageModal()">확인</button>
+                </div>
+            </div>
+            
+            <!-- 에러 알림 모달 -->
+            <div id="errorModal" class="error-modal">
+                <div class="error-content">
+                    <div class="error-icon">⚠️</div>
+                    <div class="error-text" id="errorText"></div>
+                </div>
+            </div>
+            
+            <!-- 처리중 모달 -->
+            <div id="processingModal" class="processing-modal">
+                <div class="processing-content">
+                    <div class="processing-spinner"></div>
+                    <div class="processing-text" id="processingText">처리 중...</div>
+                </div>
             </div>
         </div>
     </section>
