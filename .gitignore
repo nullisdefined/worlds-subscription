@@ -1,4 +1,15 @@
-# 맥 시스템 파일
+# AWS Lambda
+lambda/
+*.zip
+.aws/
+aws-config.json
+
+# 로컬 개발 설정
+config.local.js
+.env
+.env.local
+
+# 시스템 파일
 .DS_Store
 .DS_Store?
 ._*
@@ -6,9 +17,6 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-# 환경변수 파일 (로컬 개발용)
-config.local.js
 
 # 로그 파일
 *.log
@@ -27,8 +35,6 @@ yarn-error.log*
 *.temp
 
 # 환경 설정 파일 (있다면)
-.env
-.env.local
 .env.development.local
 .env.test.local
 .env.production.local
