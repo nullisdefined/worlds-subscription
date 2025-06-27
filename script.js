@@ -521,6 +521,13 @@ function handleLoginClick() {
   window.location.href = kakaoAuthUrl;
 }
 
+// 카카오 로그인 처리 (모달에서 사용)
+function handleKakaoLogin() {
+  console.log("카카오 로그인 버튼 클릭");
+  closeLoginModal(); // 모달 닫기
+  handleLoginClick(); // 실제 로그인 처리
+}
+
 async function handleLoginCallback(authCode) {
   try {
     showProcessingModal("로그인 처리 중...");
