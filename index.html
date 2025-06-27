@@ -36,13 +36,24 @@
                 <div id="userDropdown" class="user-dropdown" style="display: none;">
                     <button id="userMenuBtn" class="user-menu-btn">
                         <img id="userAvatar" class="user-avatar" src="" alt="프로필">
-                        <span id="userNickname"></span>
+                        <div class="user-info-text">
+                            <span id="userNickname" class="user-nickname"></span>
+                            <span id="userEmailSmall" class="user-email-small"></span>
+                        </div>
                         <i data-lucide="chevron-down"></i>
                     </button>
                     <div id="dropdownMenu" class="dropdown-menu">
                         <button id="logoutBtn" class="dropdown-item">
                             <i data-lucide="log-out"></i>
                             로그아웃
+                        </button>
+                        <button id="unsubscribeMenuBtn" class="dropdown-item unsubscribe-item">
+                            <i data-lucide="pause-circle"></i>
+                            구독 중단
+                        </button>
+                        <button id="deleteAccountBtn" class="dropdown-item delete-account-item">
+                            <i data-lucide="user-minus"></i>
+                            회원탈퇴
                         </button>
                     </div>
                 </div>
@@ -54,19 +65,19 @@
     <section class="hero">
         <div class="hero-content">
             <h1>전 세계 언어를<br>카카오톡으로 학습하세요</h1>
-            <p>매시간 새로운 영어, 중국어, 일본어 단어를 받아보고 자연스럽게 어휘력을 늘려보세요!</p>
+            <p>매일 새로운 영어, 중국어, 일본어 단어를 받아보고 자연스럽게 어휘력을 늘려보세요!</p>
             <div class="hero-features">
                 <div class="hero-feature">
                     <span class="icon"><i data-lucide="clock"></i></span>
-                    <span>매시간 자동 전송</span>
+                    <span>매일 정해진 시간 메시지 전송</span>
                 </div>
                 <div class="hero-feature">
                     <span class="icon"><i data-lucide="globe"></i></span>
-                    <span>3개 언어 지원</span>
+                    <span>다국어 지원</span>
                 </div>
                 <div class="hero-feature">
                     <span class="icon"><i data-lucide="message-circle"></i></span>
-                    <span>카카오톡 연동</span>
+                    <span>카카오톡으로 쉽게 학습</span>
                 </div>
             </div>
             <button id="subscribeBtn" class="btn btn-primary btn-large" onclick="scrollToLanguages()">
@@ -76,33 +87,94 @@
     </section>
 
     <!-- 사용자 정보 (로그인 후 표시) -->
-    <section id="userInfo" class="user-info">
-        <div class="user-profile">
-            <img id="userProfile" class="profile-image" src="" alt="프로필">
-            <div class="user-details">
-                <h3 id="userName">사용자명</h3>
-                <p id="userEmail">이메일</p>
+    <section id="userInfo" class="user-info-hero">
+        <div class="hero-content">
+            <div class="user-welcome">
+                <div class="user-profile-section">
+                    <img id="userProfile" class="profile-image-large" src="" alt="프로필">
+                    <div class="user-details-hero">
+                        <h2 id="userName">사용자명</h2>
+                        <p id="userEmail" class="user-email-hero">이메일</p>
+                    </div>
+                </div>
+                
+                <div class="subscription-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i data-lucide="calendar-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">가입일</div>
+                            <div class="stat-value" id="subscriptionStartDate">2025-01-01</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i data-lucide="heart"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">함께한지</div>
+                            <div class="stat-value" id="subscriptionDays">0일째</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i data-lucide="globe"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">학습 언어</div>
+                            <div class="stat-value" id="selectedLanguages">English</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon status-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">구독 상태</div>
+                            <div class="stat-value" id="subscriptionStatus">활성</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">수신 시간</div>
+                            <div class="stat-value" id="messageTime">오전 9시</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i data-lucide="target"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">학습 난이도</div>
+                            <div class="stat-value" id="difficultyLevel">BASIC</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-actions-hero">
+                    <button id="manageSubscription" class="btn btn-primary">
+                        <i data-lucide="edit"></i>
+                        학습 언어 변경
+                    </button>
+                    <button id="changeTimeBtn" class="btn btn-outline">
+                        <i data-lucide="clock"></i>
+                        수신 시간대 변경
+                    </button>
+                    <button id="changeDifficultyBtn" class="btn btn-outline">
+                        <i data-lucide="target"></i>
+                        학습 난이도 변경
+                    </button>
+                </div>
             </div>
-        </div>
-        
-        <div class="subscription-info">
-            <div class="info-item">
-                <div class="info-label">구독 상태</div>
-                <div class="info-value" id="subscriptionStatus">활성</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">선택한 언어</div>
-                <div class="info-value" id="selectedLanguages">영어</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">구독 시작일</div>
-                <div class="info-value" id="subscriptionDate">2025-06-26</div>
-            </div>
-        </div>
-        
-        <div class="user-actions">
-            <button id="manageSubscription" class="btn btn-outline">언어 변경</button>
-            <button id="unsubscribeBtn" class="btn btn-outline" style="color: #e53e3e; border-color: #e53e3e;">구독 취소</button>
         </div>
     </section>
 
@@ -110,7 +182,7 @@
     <section id="languages" class="language-selection">
         <div class="language-content">
             <h2 class="section-title">학습하고 싶은 언어를 선택하세요</h2>
-            <p class="section-subtitle">여러 언어를 동시에 선택할 수 있습니다. 각 언어별로 맞춤형 학습 콘텐츠를 제공해드려요!</p>
+            <p class="section-subtitle">하나의 언어를 선택해주세요. 선택한 언어로 맞춤형 학습 콘텐츠를 제공해드려요!</p>
             
             <div class="language-options">
                 <div class="language-card selected" data-language="english">
@@ -152,7 +224,7 @@
             
             <div class="subscribe-section">
                 <button class="subscribe-btn" onclick="subscribeService()">
-                    📱 1개 언어 구독하기
+                    언어 구독하기
                 </button>
             </div>
             
@@ -221,8 +293,429 @@
         </div>
     </div>
 
+    <!-- 구독 확인 모달 -->
+    <div id="subscriptionConfirmModal" class="modal">
+        <div class="modal-content">
+            <div class="confirm-header">
+                <h2>📌 구독하시겠습니까?</h2>
+            </div>
+            <div class="confirm-body">
+                <div class="selected-languages-display">
+                    <p><strong>선택한 언어:</strong> <span id="confirmLanguagesList"></span></p>
+                </div>
+                <div class="subscription-info">
+                    <div class="subscription-settings">
+                        <h4>선택한 옵션</h4>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <div class="setting-icon">⏰</div>
+                                <div class="setting-info">
+                                    <div class="setting-label">수신 시간</div>
+                                    <div class="setting-value" id="confirmTimeDisplay">오전 9시</div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-icon">🎯</div>
+                                <div class="setting-info">
+                                    <div class="setting-label">난이도</div>
+                                    <div class="setting-value" id="confirmDifficultyDisplay">BASIC</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="warning-box">
+                        <p>⚠️</p>
+                        <p>구독 후 <strong>2주 동안 언어 변경이 불가능</strong>합니다.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="confirm-actions">
+                <button id="cancelSubscription" class="btn btn-outline">취소</button>
+                <button id="confirmSubscription" class="btn btn-primary">구독하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 시간 변경 모달 -->
+    <div id="timeChangeModal" class="modal">
+        <div class="modal-content time-change-modal">
+            <span class="close" onclick="closeTimeChangeModal()">&times;</span>
+            <div class="time-change-header">
+                <div class="time-icon">
+                    <i data-lucide="clock"></i>
+                </div>
+                <h2>수신 시간대 변경</h2>
+                <p>새로운 수신 시간을 선택해주세요</p>
+            </div>
+            
+            <div class="time-select-container">
+                <div class="current-time-display">
+                    <span class="current-label">현재 시간</span>
+                    <span class="current-time" id="currentTimeDisplay">오전 9시</span>
+                </div>
+                
+                <div class="time-grid">
+                    <div class="time-option" data-time="08:00">
+                        <div class="time-value">오전 8시</div>
+                    </div>
+                    <div class="time-option selected" data-time="09:00">
+                        <div class="time-value">오전 9시</div>
+                        <div class="time-badge">기본</div>
+                    </div>
+                    <div class="time-option" data-time="10:00">
+                        <div class="time-value">오전 10시</div>
+                    </div>
+                    <div class="time-option" data-time="11:00">
+                        <div class="time-value">오전 11시</div>
+                    </div>
+                    <div class="time-option" data-time="12:00">
+                        <div class="time-value">오후 12시</div>
+                    </div>
+                    <div class="time-option" data-time="13:00">
+                        <div class="time-value">오후 1시</div>
+                    </div>
+                    <div class="time-option" data-time="14:00">
+                        <div class="time-value">오후 2시</div>
+                    </div>
+                    <div class="time-option" data-time="15:00">
+                        <div class="time-value">오후 3시</div>
+                    </div>
+                    <div class="time-option" data-time="16:00">
+                        <div class="time-value">오후 4시</div>
+                    </div>
+                    <div class="time-option" data-time="17:00">
+                        <div class="time-value">오후 5시</div>
+                    </div>
+                    <div class="time-option" data-time="18:00">
+                        <div class="time-value">오후 6시</div>
+                    </div>
+                    <div class="time-option" data-time="19:00">
+                        <div class="time-value">오후 7시</div>
+                    </div>
+                    <div class="time-option" data-time="20:00">
+                        <div class="time-value">오후 8시</div>
+                    </div>
+                    <div class="time-option" data-time="21:00">
+                        <div class="time-value">오후 9시</div>
+                    </div>
+                    <div class="time-option" data-time="22:00">
+                        <div class="time-value">오후 10시</div>
+                    </div>
+                </div>
+                
+                <div class="time-info">
+                    <div class="info-icon">
+                        <i data-lucide="info"></i>
+                    </div>
+                    <span>시간 변경은 다음날부터 적용됩니다</span>
+                </div>
+            </div>
+            
+            <div class="time-change-actions">
+                <button id="cancelTimeChange" class="btn btn-outline">취소</button>
+                <button id="confirmTimeChange" class="btn btn-primary">변경하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 난이도 변경 모달 -->
+    <div id="difficultyChangeModal" class="modal">
+        <div class="modal-content difficulty-change-modal">
+            <span class="close" onclick="closeDifficultyChangeModal()">&times;</span>
+            <div class="difficulty-change-header">
+                <div class="difficulty-icon">
+                    <i data-lucide="target"></i>
+                </div>
+                <h2>학습 난이도 변경</h2>
+                <p>새로운 학습 난이도를 선택해주세요</p>
+            </div>
+            
+            <div class="difficulty-select-container">
+                <div class="current-difficulty-display">
+                    <span class="current-label">현재 난이도</span>
+                    <span class="current-difficulty" id="currentDifficultyDisplay">BASIC</span>
+                </div>
+                
+                <div class="difficulty-grid">
+                    <div class="difficulty-option selected" data-difficulty="basic">
+                        <div class="difficulty-icon-small">
+                            <i data-lucide="circle"></i>
+                        </div>
+                        <div class="difficulty-info">
+                            <div class="difficulty-value">BASIC</div>
+                            <div class="difficulty-desc">기초 레벨</div>
+                        </div>
+                        <div class="difficulty-badge">기본</div>
+                    </div>
+                    <div class="difficulty-option" data-difficulty="intermediate">
+                        <div class="difficulty-icon-small">
+                            <i data-lucide="triangle"></i>
+                        </div>
+                        <div class="difficulty-info">
+                            <div class="difficulty-value">INTERMEDIATE</div>
+                            <div class="difficulty-desc">중급 레벨</div>
+                        </div>
+                    </div>
+                    <div class="difficulty-option" data-difficulty="advanced">
+                        <div class="difficulty-icon-small">
+                            <i data-lucide="diamond"></i>
+                        </div>
+                        <div class="difficulty-info">
+                            <div class="difficulty-value">ADVANCED</div>
+                            <div class="difficulty-desc">고급 레벨</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="difficulty-info-text">
+                    <div class="info-icon">
+                        <i data-lucide="info"></i>
+                    </div>
+                    <span>난이도 변경은 다음날부터 적용됩니다</span>
+                </div>
+            </div>
+            
+            <div class="difficulty-change-actions">
+                <button id="cancelDifficultyChange" class="btn btn-outline">취소</button>
+                <button id="confirmDifficultyChange" class="btn btn-primary">변경하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 구독중지 확인 모달 -->
+    <div id="unsubscribeModal" class="modal">
+        <div class="modal-content unsubscribe-modal">
+            <div class="unsubscribe-header">
+                <h2>구독중지 확인</h2>
+                <p>정말로 구독을 중지하시겠습니까?</p>
+            </div>
+            
+            <div class="unsubscribe-info">
+                <div class="info-box warning">
+                    <div class="info-text">
+                        <p><strong>구독중지 시 다음과 같은 변경사항이 있습니다:</strong></p>
+                        <div class="info-list">
+                            <p>매일 받던 단어 메시지가 중단됩니다</p>
+                            <p>언제든지 다시 구독하실 수 있습니다</p>
+                            <p>계정 정보는 그대로 유지됩니다</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="unsubscribe-actions">
+                <button id="cancelUnsubscribe" class="btn btn-outline">취소</button>
+                <button id="confirmUnsubscribe" class="btn btn-danger">구독중지</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 회원탈퇴 확인 모달 -->
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content delete-account-modal">
+            <div class="delete-account-header">
+                <h2>회원탈퇴 확인</h2>
+                <p>정말로 회원탈퇴를 하시겠습니까?</p>
+            </div>
+            
+            <div class="delete-account-info">
+                <div class="info-box danger">
+                    <div class="info-text">
+                        <p><strong>회원탈퇴 시 다음과 같은 변경사항이 있습니다:</strong></p>
+                        <div class="info-list">
+                            <p>모든 구독 정보가 영구적으로 삭제됩니다</p>
+                            <p>계정 정보가 완전히 삭제되며 복구할 수 없습니다</p>
+                            <p>동일한 계정으로 재가입 시 새로 시작해야 합니다</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="delete-account-actions">
+                <button id="cancelDeleteAccount" class="btn btn-outline">취소</button>
+                <button id="confirmDeleteAccount" class="btn btn-delete">회원탈퇴</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 신규 가입자 언어 선택 결과 모달 -->
+    <div id="languageSelectedModal" class="modal">
+        <div class="modal-content language-selected-modal">
+            <div class="language-selected-header">
+                <div class="language-selected-icon">
+                    <i data-lucide="check-circle"></i>
+                </div>
+                <h2>언어 선택 완료</h2>
+                <p>선택하신 언어로 구독을 시작하시겠습니까?</p>
+            </div>
+            
+            <div class="selected-language-display">
+                <div class="selected-language-card">
+                    <img id="selectedLanguageFlag" src="" alt="선택된 언어 국기" class="selected-flag">
+                    <div class="selected-language-info">
+                        <div class="selected-language-name" id="selectedLanguageName"></div>
+                        <div class="selected-language-desc" id="selectedLanguageDesc"></div>
+                    </div>
+                </div>
+                
+                <div class="language-sample" id="selectedLanguageSample">
+                    <!-- 선택된 언어의 샘플이 여기에 표시됩니다 -->
+                </div>
+            </div>
+            
+            <div class="language-selected-actions">
+                <button id="backToLanguageSelection" class="btn btn-outline">다시 선택</button>
+                <button id="proceedToTimeSelection" class="btn btn-primary">다음</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 신규 가입자 시간대 설정 모달 -->
+    <div id="newUserTimeModal" class="modal">
+        <div class="modal-content time-change-modal">
+            <div class="time-change-header">
+                <div class="time-icon">
+                    <i data-lucide="clock"></i>
+                </div>
+                <h2>수신 시간대 설정</h2>
+                <p>수신 시간을 선택해주세요</p>
+            </div>
+            
+            <div class="time-select-container">
+                <div class="current-time-display">
+                    <span class="current-label">선택된 시간</span>
+                    <span class="current-time" id="newUserCurrentTime">오전 9시</span>
+                </div>
+                
+                <div class="time-grid">
+                    <div class="time-option" data-time="08:00">
+                        <div class="time-value">오전 8시</div>
+                    </div>
+                    <div class="time-option selected" data-time="09:00">
+                        <div class="time-value">오전 9시</div>
+                    </div>
+                    <div class="time-option" data-time="10:00">
+                        <div class="time-value">오전 10시</div>
+                    </div>
+                    <div class="time-option" data-time="11:00">
+                        <div class="time-value">오전 11시</div>
+                    </div>
+                    <div class="time-option" data-time="12:00">
+                        <div class="time-value">오후 12시</div>
+                    </div>
+                    <div class="time-option" data-time="13:00">
+                        <div class="time-value">오후 1시</div>
+                    </div>
+                    <div class="time-option" data-time="14:00">
+                        <div class="time-value">오후 2시</div>
+                    </div>
+                    <div class="time-option" data-time="15:00">
+                        <div class="time-value">오후 3시</div>
+                    </div>
+                    <div class="time-option" data-time="16:00">
+                        <div class="time-value">오후 4시</div>
+                    </div>
+                    <div class="time-option" data-time="17:00">
+                        <div class="time-value">오후 5시</div>
+                    </div>
+                    <div class="time-option" data-time="18:00">
+                        <div class="time-value">오후 6시</div>
+                    </div>
+                    <div class="time-option" data-time="19:00">
+                        <div class="time-value">오후 7시</div>
+                    </div>
+                    <div class="time-option" data-time="20:00">
+                        <div class="time-value">오후 8시</div>
+                    </div>
+                    <div class="time-option" data-time="21:00">
+                        <div class="time-value">오후 9시</div>
+                    </div>
+                    <div class="time-option" data-time="22:00">
+                        <div class="time-value">오후 10시</div>
+                    </div>
+                </div>
+                
+                <div class="time-info">
+                    <div class="info-icon">
+                        <i data-lucide="info"></i>
+                    </div>
+                    <span>언제든지 다시 변경할 수 있습니다</span>
+                </div>
+            </div>
+            
+            <div class="time-change-actions">
+                <button id="cancelNewUserTime" class="btn btn-outline">이전</button>
+                <button id="confirmNewUserTime" class="btn btn-primary">다음</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 신규 가입자 난이도 설정 모달 -->
+    <div id="newUserDifficultyModal" class="modal">
+        <div class="modal-content difficulty-change-modal">
+            <div class="difficulty-change-header">
+                <div class="difficulty-icon">
+                    <i data-lucide="trending-up"></i>
+                </div>
+                <h2>난이도 설정</h2>
+                <p>난이도를 선택해주세요</p>
+            </div>
+            
+            <div class="difficulty-select-container">
+                <div class="current-difficulty-display">
+                    <span class="current-label">선택된 난이도</span>
+                    <span class="current-difficulty" id="newUserCurrentDifficulty">BEGINNER</span>
+                </div>
+                
+                <div class="difficulty-grid">
+                    <div class="difficulty-option selected" data-difficulty="beginner">
+                        <div class="difficulty-icon-small">
+                            <i data-lucide="circle"></i>
+                        </div>
+                        <div class="difficulty-info">
+                            <div class="difficulty-value">BEGINNER</div>
+                            <div class="difficulty-desc">초급 레벨</div>
+                        </div>
+                    </div>
+                    <div class="difficulty-option" data-difficulty="intermediate">
+                        <div class="difficulty-icon-small">
+                            <i data-lucide="square"></i>
+                        </div>
+                        <div class="difficulty-info">
+                            <div class="difficulty-value">INTERMEDIATE</div>
+                            <div class="difficulty-desc">중급 레벨</div>
+                        </div>
+                    </div>
+                    <div class="difficulty-option" data-difficulty="advanced">
+                        <div class="difficulty-icon-small">
+                            <i data-lucide="diamond"></i>
+                        </div>
+                        <div class="difficulty-info">
+                            <div class="difficulty-value">ADVANCED</div>
+                            <div class="difficulty-desc">고급 레벨</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="difficulty-info-text">
+                    <div class="info-icon">
+                        <i data-lucide="info"></i>
+                    </div>
+                    <span>언제든지 변경할 수 있습니다</span>
+                </div>
+            </div>
+            
+            <div class="difficulty-change-actions">
+                <button id="cancelNewUserDifficulty" class="btn btn-outline">이전</button>
+                <button id="confirmNewUserDifficulty" class="btn btn-primary">구독 시작</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 기능 소개 섹션 -->
-    <section class="features-section">
+    <section id="features" class="features-section">
         <div class="features-content">
             <h2 class="section-title">어떤 혜택이 있나요?</h2>
             <div class="features-intro">
@@ -268,6 +761,68 @@
             </div>
         </div>
     </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="assets/logo.png" alt="Worlds Subscription Logo">
+                        <h3>Worlds Subscription</h3>
+                    </div>
+                    <p class="footer-desc">
+                        전 세계 언어를 카카오톡으로 쉽고 재미있게 학습하세요.<br>
+                        매일 새로운 단어와 함께 자연스럽게 실력을 향상시켜보세요.
+                    </p>
+                    <div class="footer-social">
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>서비스</h4>
+                        <ul>
+                            <li><a href="#languages">언어 선택</a></li>
+                            <li><a href="#features">서비스 소개</a></li>
+                            <li><a href="http://pf.kakao.com/_xnzTxin/friend" target="_blank">카카오톡 채널</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>지원 언어</h4>
+                        <ul>
+                            <li><span class="language-item">English</span></li>
+                            <li><span class="language-item">中文</span></li>
+                            <li><span class="language-item">日本語</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>문의하기</h4>
+                        <ul>
+                            <li><a href="http://pf.kakao.com/_xnzTxin/friend" target="_blank">
+                                <i data-lucide="message-circle"></i>
+                                @worlds_sub
+                            </a></li>
+                            <li><a href="mailto:worlds.subscription@gmail.com">
+                                <i data-lucide="mail"></i>
+                                worlds.subscription@gmail.com
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="footer-info">
+                        <p>&copy; 2025 Worlds Subscription. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
