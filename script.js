@@ -5,13 +5,14 @@ const isLocalhost =
 const isFileProtocol = window.location.protocol === "file:";
 
 // 환경별 설정
-let API_BASE_URL, API_URL, REDIRECT_URI;
+let API_BASE_URL, LOGIN_API_URL, SUBSCRIPTION_API_URL, REDIRECT_URI;
 
 if (isLocalhost || isFileProtocol) {
   // 로컬 환경 (Live Server 사용)
   API_BASE_URL =
     "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod";
-  API_URL = API_BASE_URL + "/subscribe";
+  LOGIN_API_URL = API_BASE_URL + "/login";
+  SUBSCRIPTION_API_URL = API_BASE_URL + "/subscribe";
   REDIRECT_URI = "http://localhost:5500/"; // Live Server 포트
   console.log("Development Environment");
 } else {
@@ -19,9 +20,9 @@ if (isLocalhost || isFileProtocol) {
   API_BASE_URL =
     window.ENV?.API_BASE_URL ||
     "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod";
-  API_URL = API_BASE_URL + "/subscribe";
+  LOGIN_API_URL = API_BASE_URL + "/login";
+  SUBSCRIPTION_API_URL = API_BASE_URL + "/subscribe";
   REDIRECT_URI = window.location.origin + "/worlds-subscription/";
-  //   console.log("Production Environment");
 }
 
 const KAKAO_APP_KEY =
@@ -29,6 +30,68 @@ const KAKAO_APP_KEY =
 
 let selectedLanguages = ["english"];
 let currentUser = null;
+let authSession = null;
+
+// 세션 관리 클래스
+class AuthSession {
+  constructor() {
+    this.accessToken = null;
+    this.refreshToken = null;
+    this.expiresAt = null;
+    this.userInfo = null;
+  }
+
+  static fromStorage() {
+    const sessionData = localStorage.getItem("authSession");
+    if (sessionData) {
+      try {
+        const data = JSON.parse(sessionData);
+        const session = new AuthSession();
+        session.accessToken = data.accessToken;
+        session.refreshToken = data.refreshToken;
+        session.expiresAt = data.expiresAt ? new Date(data.expiresAt) : null;
+        session.userInfo = data.userInfo;
+        return session;
+      } catch (e) {
+        console.error("Error parsing session data:", e);
+        localStorage.removeItem("authSession");
+      }
+    }
+    return null;
+  }
+
+  saveToStorage() {
+    const sessionData = {
+      accessToken: this.accessToken,
+      refreshToken: this.refreshToken,
+      expiresAt: this.expiresAt ? this.expiresAt.toISOString() : null,
+      userInfo: this.userInfo,
+    };
+    localStorage.setItem("authSession", JSON.stringify(sessionData));
+  }
+
+  clear() {
+    this.accessToken = null;
+    this.refreshToken = null;
+    this.expiresAt = null;
+    this.userInfo = null;
+    localStorage.removeItem("authSession");
+    localStorage.removeItem("currentUser"); // 기존 저장 데이터도 정리
+  }
+
+  isValid() {
+    if (!this.accessToken) return false;
+    if (!this.expiresAt) return true; // 만료 시간이 없으면 유효하다고 가정
+    return new Date() < this.expiresAt;
+  }
+
+  needsRefresh() {
+    if (!this.expiresAt) return false;
+    // 만료 10분 전에 갱신
+    const refreshTime = new Date(this.expiresAt.getTime() - 10 * 60 * 1000);
+    return new Date() > refreshTime;
+  }
+}
 
 // DOM 요소들
 const loginBtn = document.getElementById("loginBtn");
@@ -42,7 +105,7 @@ const logoutBtn = document.getElementById("logoutBtn");
 // 이벤트 리스너 설정
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
-  checkLoginStatus();
+  initializeApp();
   setupLanguageCards();
 
   // Lucide 아이콘 초기화
@@ -50,6 +113,52 @@ document.addEventListener("DOMContentLoaded", () => {
     lucide.createIcons();
   }
 });
+
+async function initializeApp() {
+  console.log("앱 초기화 중...");
+
+  // 기존 세션 복원
+  authSession = AuthSession.fromStorage();
+
+  if (authSession) {
+    console.log("기존 세션 발견:", authSession.userInfo);
+
+    // 토큰 유효성 확인
+    if (authSession.isValid()) {
+      if (authSession.needsRefresh()) {
+        console.log("토큰 갱신 필요");
+        await refreshAuthToken();
+      }
+
+      // 세션 유효성 재확인
+      const isSessionValid = await checkSession();
+      if (isSessionValid) {
+        updateUIForLoggedInUser();
+        return;
+      }
+    }
+
+    // 유효하지 않은 세션 정리
+    console.log("유효하지 않은 세션 정리");
+    authSession.clear();
+    authSession = null;
+  }
+
+  // OAuth 콜백 처리
+  const urlParams = new URLSearchParams(window.location.search);
+  const authCode = urlParams.get("code");
+  const error = urlParams.get("error");
+
+  if (error) {
+    handleOAuthError(error, urlParams.get("error_description"));
+    return;
+  }
+
+  if (authCode) {
+    console.log("OAuth 콜백 처리 중...");
+    await handleLoginCallback(authCode);
+  }
+}
 
 function setupEventListeners() {
   // 로그인 관련
@@ -167,10 +276,7 @@ function scrollToLanguages() {
 
 // 카카오톡 채널 친구추가
 function addKakaoChannel() {
-  // 카카오톡 채널 친구추가 URL
   const channelUrl = "http://pf.kakao.com/_xnzTxin/friend";
-
-  // 새 창으로 채널 페이지 열기
   const popup = window.open(
     channelUrl,
     "kakaoChannel",
@@ -178,15 +284,12 @@ function addKakaoChannel() {
   );
 
   if (!popup) {
-    // 팝업이 차단된 경우 바로 리턴
     return;
   }
 
-  // 팝업 닫힘 감지 (친구추가 완료 후)
   const checkClosed = setInterval(() => {
     if (popup.closed) {
       clearInterval(checkClosed);
-      // 친구추가 완료 후 모달 닫기
       closeChannelNotification();
     }
   }, 1000);
@@ -198,355 +301,368 @@ function subscribeService() {
     return;
   }
 
-  // 채널 친구추가 알림 모달 표시
-  showChannelNotification();
+  // 로그인 확인
+  if (!currentUser) {
+    showChannelNotification();
+    return;
+  }
+
+  // 이미 구독된 사용자면 구독 업데이트
+  if (currentUser.isSubscribed) {
+    updateSubscription();
+  } else {
+    createSubscription();
+  }
 }
 
-// 채널 알림 모달 표시
+async function createSubscription() {
+  try {
+    showProcessingModal("구독 처리 중...");
+
+    const response = await fetch(SUBSCRIPTION_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "subscribe",
+        user_id: currentUser.id,
+        nickname: currentUser.nickname,
+        email: currentUser.email,
+        profile_image: currentUser.profileImage,
+        languages: selectedLanguages,
+      }),
+    });
+
+    const data = await response.json();
+    hideProcessingModal();
+
+    if (data.success) {
+      // 사용자 정보 업데이트
+      currentUser.isSubscribed = true;
+      currentUser.languages = data.languages;
+      currentUser.subscriptionStatus = data.subscription_status;
+      currentUser.subscriptionDate = data.subscription_date;
+
+      // 세션 정보도 업데이트
+      if (authSession) {
+        authSession.userInfo = currentUser;
+        authSession.saveToStorage();
+      }
+
+      updateUIForLoggedInUser();
+      showResult(`🎉 ${data.nickname}님, 구독이 완료되었습니다!`, "success");
+    } else {
+      showResult(data.error || "구독 처리에 실패했습니다.", "error");
+    }
+  } catch (error) {
+    console.error("구독 처리 오류:", error);
+    hideProcessingModal();
+    showResult("구독 처리 중 오류가 발생했습니다.", "error");
+  }
+}
+
+async function updateSubscription() {
+  try {
+    showProcessingModal("구독 정보 업데이트 중...");
+
+    const response = await fetch(SUBSCRIPTION_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "update_subscription",
+        user_id: currentUser.id,
+        languages: selectedLanguages,
+      }),
+    });
+
+    const data = await response.json();
+    hideProcessingModal();
+
+    if (data.success) {
+      // 사용자 정보 업데이트
+      currentUser.languages = data.languages;
+
+      // 세션 정보도 업데이트
+      if (authSession) {
+        authSession.userInfo = currentUser;
+        authSession.saveToStorage();
+      }
+
+      updateUIForLoggedInUser();
+      showResult("구독 정보가 업데이트되었습니다!", "success");
+    } else {
+      showResult(data.error || "구독 업데이트에 실패했습니다.", "error");
+    }
+  } catch (error) {
+    console.error("구독 업데이트 오류:", error);
+    hideProcessingModal();
+    showResult("구독 업데이트 중 오류가 발생했습니다.", "error");
+  }
+}
+
 function showChannelNotification() {
   const modal = document.getElementById("channelNotificationModal");
-  modal.classList.add("show");
+  if (modal) {
+    modal.style.display = "flex";
+  }
 }
 
-// 채널 알림 모달 닫기
 function closeChannelNotification() {
   const modal = document.getElementById("channelNotificationModal");
-  modal.classList.remove("show");
+  if (modal) {
+    modal.style.display = "none";
+  }
 
-  // 친구추가 완료 후 바로 구독 진행
-  setTimeout(() => {
-    proceedWithSubscription();
-  }, 300);
-}
-
-// 안내 메시지 모달 표시
-function showMessageModal(message) {
-  const modal = document.getElementById("messageModal");
-  const messageText = document.getElementById("messageText");
-  messageText.textContent = message;
-  modal.classList.add("show");
-}
-
-// 안내 메시지 모달 닫기
-function closeMessageModal() {
-  const modal = document.getElementById("messageModal");
-  modal.classList.remove("show");
-}
-
-// 에러 모달 표시 (자동으로 사라짐)
-function showErrorModal(message) {
-  const modal = document.getElementById("errorModal");
-  const errorText = document.getElementById("errorText");
-  errorText.textContent = message;
-  modal.classList.add("show");
-
-  // 3.5초 후 자동으로 모달 닫기
-  setTimeout(() => {
-    modal.classList.remove("show");
-  }, 3500);
-}
-
-// 처리중 모달 표시
-function showProcessingModal(message = "처리 중...") {
-  const modal = document.getElementById("processingModal");
-  const processingText = document.getElementById("processingText");
-  processingText.textContent = message;
-  modal.classList.add("show");
-}
-
-// 처리중 모달 닫기
-function hideProcessingModal() {
-  const modal = document.getElementById("processingModal");
-  modal.classList.remove("show");
-}
-
-// 구독 진행
-function proceedWithSubscription() {
+  // 로그인하지 않은 사용자면 로그인 처리
   if (!currentUser) {
-    openLoginModal();
-    return;
-  }
-
-  // 이미 로그인된 경우 바로 구독 처리
-  processSubscription();
-}
-
-// 로그인 상태 확인 함수
-function checkLoginStatus() {
-  console.log("로그인 상태 확인 중...");
-
-  // 저장된 사용자 정보 복원
-  const savedUser = localStorage.getItem("currentUser");
-  if (savedUser) {
-    try {
-      currentUser = JSON.parse(savedUser);
-      console.log("저장된 사용자 정보 복원:", currentUser);
-      updateUIForLoggedInUser();
-      return; // 로그인된 상태이면 OAuth 처리 건너뛰기
-    } catch (e) {
-      console.error("저장된 사용자 정보 파싱 오류:", e);
-      localStorage.removeItem("currentUser");
-    }
-  }
-
-  // URL에서 인증 코드 확인
-  const urlParams = new URLSearchParams(window.location.search);
-  const authCode = urlParams.get("code");
-  const error = urlParams.get("error");
-  const errorDescription = urlParams.get("error_description");
-
-  console.log("URL 파라미터:", { authCode, error, errorDescription });
-
-  if (error) {
-    console.error("Kakao OAuth Error:", error, errorDescription);
-
-    // 카카오 OAuth 에러를 사용자 친화적으로 변환
-    let userMessage = "로그인 중 오류가 발생했습니다.";
-
-    if (error === "access_denied") {
-      userMessage = "로그인이 취소되었습니다.";
-    } else if (error === "invalid_request") {
-      userMessage = "잘못된 로그인 요청입니다. 다시 시도해주세요.";
-    } else if (error === "server_error") {
-      userMessage =
-        "카카오 서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
-    } else if (errorDescription && errorDescription.includes("Redirect URI")) {
-      userMessage = "페이지 설정에 문제가 있습니다. 관리자에게 문의해주세요.";
-    } else {
-      userMessage = "카카오 로그인에 실패했습니다. 다시 시도해주세요.";
-    }
-
-    showResult(userMessage, "error");
-    // URL 정리
-    window.history.replaceState({}, document.title, window.location.pathname);
-    return;
-  }
-
-  if (authCode) {
-    console.log("Authorization code received:", authCode);
-    console.log("현재 URL:", window.location.href);
-    console.log("REDIRECT_URI:", REDIRECT_URI);
-
-    // 카카오 콜백 처리 중 로딩 표시
-    showLoading();
-    handleSubscriptionCallback(authCode);
+    proceedWithLogin();
+  } else {
+    // 이미 로그인된 사용자면 바로 구독 처리
+    subscribeService();
   }
 }
 
-// 구독 처리 함수
-function processSubscription() {
-  showResult("구독 처리 중...", "info");
-
+function proceedWithLogin() {
   // 선택한 언어 정보를 세션에 저장
   sessionStorage.setItem(
     "selectedLanguages",
     JSON.stringify(selectedLanguages)
   );
 
-  // 카카오 인증 URL 생성 시 state 파라미터 추가
-  const state = Math.random().toString(36).substring(2, 15);
-  sessionStorage.setItem("kakao_state", state);
-
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_APP_KEY}&redirect_uri=${encodeURIComponent(
-    REDIRECT_URI
-  )}&response_type=code&state=${state}`;
-
-  console.log("Redirecting to:", kakaoAuthUrl);
-  window.location.href = kakaoAuthUrl;
+  // 카카오 로그인으로 이동
+  handleLoginClick();
 }
 
-// 구독 콜백 처리 함수
-function handleSubscriptionCallback(authCode) {
-  // state 검증
-  const urlParams = new URLSearchParams(window.location.search);
-  const returnedState = urlParams.get("state");
-  const savedState = sessionStorage.getItem("kakao_state");
+function showMessageModal(message) {
+  const modal = document.getElementById("messageModal");
+  const messageText = document.getElementById("messageText");
 
-  if (returnedState !== savedState) {
-    showResult(
-      "로그인 보안 검증에 실패했습니다. 처음부터 다시 시도해주세요.",
-      "error"
-    );
-    window.history.replaceState({}, document.title, window.location.pathname);
-    return;
+  if (modal && messageText) {
+    messageText.textContent = message;
+    modal.style.display = "flex";
   }
-
-  // 세션에서 선택한 언어 정보 복원
-  const savedLanguages = sessionStorage.getItem("selectedLanguages");
-  if (savedLanguages) {
-    selectedLanguages = JSON.parse(savedLanguages);
-    // UI 업데이트
-    selectedLanguages.forEach((lang) => {
-      const card = document.querySelector(`[data-language="${lang}"]`);
-      if (card) card.classList.add("selected");
-    });
-    updateSubscribeButton();
-  }
-
-  // 구독 처리 API 호출
-  showResult("로그인 처리 중...", "info");
-
-  const requestBody = {
-    action: "subscribe",
-    code: authCode,
-    languages: selectedLanguages,
-    redirect_uri: REDIRECT_URI, // 리다이렉트 URI도 함께 전송
-  };
-
-  console.log("Sending subscription request:", requestBody);
-  console.log("API_URL:", API_URL);
-  console.log("Headers:", {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  });
-
-  fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify(requestBody),
-  })
-    .then(async (response) => {
-      console.log("Response status:", response.status);
-      console.log("Response headers:", response.headers);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Error response body:", errorText);
-
-        // 사용자 친화적인 에러 메시지 생성
-        let userMessage = "구독 처리 중 오류가 발생했습니다.";
-
-        if (response.status === 400) {
-          userMessage = "잘못된 요청입니다. 다시 시도해주세요.";
-        } else if (response.status === 401) {
-          userMessage =
-            "카카오 로그인 인증에 실패했습니다. 다시 로그인해주세요.";
-        } else if (response.status === 403) {
-          userMessage = "접근 권한이 없습니다. 잠시 후 다시 시도해주세요.";
-        } else if (response.status === 500) {
-          userMessage =
-            "서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
-        } else if (response.status >= 500) {
-          userMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
-        }
-
-        throw new Error(userMessage);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Subscription response:", data);
-
-      // 로딩 해제
-      hideLoading();
-
-      if (data.success) {
-        // 사용자 정보 저장
-        const userData = {
-          id: data.user_id,
-          nickname: data.nickname || "사용자",
-          email: data.email || "",
-          languages: selectedLanguages,
-          subscriptionDate: new Date().toISOString(),
-        };
-
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-        currentUser = userData;
-
-        // UI 업데이트
-        updateUIForLoggedInUser();
-
-        // 성공 메시지 표시
-        showResult(`🎉 ${data.nickname}님, 구독이 완료되었습니다!`, "success");
-
-        // URL 정리 및 세션 정리
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname
-        );
-        sessionStorage.removeItem("selectedLanguages");
-        sessionStorage.removeItem("kakao_state");
-
-        // 구독 성공 시 메시지만 표시
-      } else {
-        // 서버에서 받은 에러 메시지를 사용자 친화적으로 변환
-        let errorMessage = "구독 처리에 실패했습니다.";
-
-        if (data.error) {
-          const error = data.error.toLowerCase();
-          if (error.includes("token") || error.includes("access")) {
-            errorMessage =
-              "카카오 로그인 정보가 만료되었습니다. 다시 로그인해주세요.";
-          } else if (error.includes("invalid") || error.includes("failed")) {
-            errorMessage = "입력 정보가 올바르지 않습니다. 다시 시도해주세요.";
-          } else if (error.includes("duplicate") || error.includes("already")) {
-            errorMessage = "이미 구독되어 있습니다.";
-          } else {
-            errorMessage =
-              "구독 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
-          }
-        }
-
-        showResult(errorMessage, "error");
-      }
-    })
-    .catch((error) => {
-      console.error("Subscription error:", error);
-
-      // 로딩 해제
-      hideLoading();
-
-      // 네트워크 오류나 기타 예외 처리
-      let errorMessage = error.message;
-
-      // 네트워크 오류 처리
-      if (
-        error.message.includes("Failed to fetch") ||
-        error.message.includes("NetworkError")
-      ) {
-        errorMessage = "인터넷 연결을 확인하고 다시 시도해주세요.";
-      } else if (error.message.includes("timeout")) {
-        errorMessage = "요청 시간이 초과되었습니다. 다시 시도해주세요.";
-      }
-
-      showResult(errorMessage, "error");
-
-      // URL 정리
-      window.history.replaceState({}, document.title, window.location.pathname);
-    });
 }
 
-// 카카오 로그인
-function handleKakaoLogin() {
+function closeMessageModal() {
+  const modal = document.getElementById("messageModal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+function showErrorModal(message) {
+  const modal = document.getElementById("errorModal");
+  const errorText = document.getElementById("errorText");
+
+  if (modal && errorText) {
+    errorText.textContent = message;
+    modal.style.display = "flex";
+
+    // 3초 후 자동으로 숨기기
+    setTimeout(() => {
+      modal.style.display = "none";
+    }, 3000);
+  }
+}
+
+function showProcessingModal(message = "처리 중...") {
+  const modal = document.getElementById("processingModal");
+  const processingText = document.getElementById("processingText");
+
+  if (modal && processingText) {
+    processingText.textContent = message;
+    modal.style.display = "flex";
+  }
+}
+
+function hideProcessingModal() {
+  const modal = document.getElementById("processingModal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+function showResult(message, type) {
+  if (type === "success") {
+    showMessageModal(message);
+  } else if (type === "error") {
+    showErrorModal(message);
+  } else {
+    showProcessingModal(message);
+  }
+}
+
+function showLoading() {
+  showProcessingModal("로딩 중...");
+}
+
+function hideLoading() {
+  hideProcessingModal();
+}
+
+function toggleDropdown() {
+  const userDropdown = document.getElementById("userDropdown");
+  if (userDropdown) {
+    userDropdown.classList.toggle("active");
+  }
+}
+
+// 로그인 처리
+function handleLoginClick() {
+  console.log("로그인 버튼 클릭");
   const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_APP_KEY}&redirect_uri=${encodeURIComponent(
     REDIRECT_URI
   )}&response_type=code`;
+
+  console.log("카카오 로그인 페이지로 리다이렉트:", kakaoAuthUrl);
   window.location.href = kakaoAuthUrl;
 }
 
+async function handleLoginCallback(authCode) {
+  try {
+    showProcessingModal("로그인 처리 중...");
+
+    const response = await fetch(LOGIN_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "login",
+        code: authCode,
+      }),
+    });
+
+    const data = await response.json();
+    hideProcessingModal();
+
+    if (data.success) {
+      // 새로운 세션 생성
+      authSession = new AuthSession();
+      authSession.accessToken = data.access_token;
+      authSession.refreshToken = data.refresh_token || null;
+      authSession.expiresAt = data.expires_in
+        ? new Date(Date.now() + data.expires_in * 1000)
+        : null;
+      authSession.userInfo = {
+        id: data.user_id,
+        nickname: data.nickname,
+        email: data.email,
+        profileImage: data.profile_image,
+        isSubscribed: data.is_subscribed,
+        languages: data.selected_languages || [],
+        subscriptionStatus: data.subscription_status,
+        subscriptionDate: data.subscription_date,
+      };
+
+      // 세션 저장
+      authSession.saveToStorage();
+
+      // 현재 사용자 정보 설정
+      currentUser = authSession.userInfo;
+
+      // UI 업데이트
+      updateUIForLoggedInUser();
+
+      // URL 정리
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      showResult(`🎉 ${data.nickname}님, 로그인이 완료되었습니다!`, "success");
+    } else {
+      showResult(data.error || "로그인에 실패했습니다.", "error");
+    }
+  } catch (error) {
+    console.error("로그인 콜백 처리 오류:", error);
+    hideProcessingModal();
+    showResult("로그인 처리 중 오류가 발생했습니다.", "error");
+  }
+}
+
+async function checkSession() {
+  if (!authSession || !authSession.accessToken) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(LOGIN_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "check_session",
+        access_token: authSession.accessToken,
+      }),
+    });
+
+    const data = await response.json();
+    return data.success && data.valid;
+  } catch (error) {
+    console.error("세션 확인 오류:", error);
+    return false;
+  }
+}
+
+async function refreshAuthToken() {
+  if (!authSession || !authSession.refreshToken) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(LOGIN_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "refresh",
+        refresh_token: authSession.refreshToken,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      authSession.accessToken = data.access_token;
+      authSession.expiresAt = data.expires_in
+        ? new Date(Date.now() + data.expires_in * 1000)
+        : null;
+      authSession.saveToStorage();
+      return true;
+    }
+  } catch (error) {
+    console.error("토큰 갱신 오류:", error);
+  }
+
+  return false;
+}
+
+function handleOAuthError(error, errorDescription) {
+  console.error("OAuth Error:", error, errorDescription);
+
+  let userMessage = "로그인 중 오류가 발생했습니다.";
+
+  if (error === "access_denied") {
+    userMessage = "로그인이 취소되었습니다.";
+  } else if (error === "invalid_request") {
+    userMessage = "잘못된 로그인 요청입니다. 다시 시도해주세요.";
+  } else if (error === "server_error") {
+    userMessage =
+      "카카오 서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+  }
+
+  showResult(userMessage, "error");
+  window.history.replaceState({}, document.title, window.location.pathname);
+}
+
 // 로그인된 사용자 UI 업데이트
-async function updateUIForLoggedInUser() {
+function updateUIForLoggedInUser() {
   if (!currentUser) return;
 
   console.log("로그인된 사용자 UI 업데이트:", currentUser);
-
-  // API에서 최신 사용자 정보 가져오기
-  if (currentUser.user_id) {
-    try {
-      const latestUserInfo = await getUserInfo(currentUser.user_id);
-      // 현재 사용자 정보를 API 응답으로 업데이트
-      currentUser = { ...currentUser, ...latestUserInfo };
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
-      console.log("API에서 가져온 최신 사용자 정보:", latestUserInfo);
-    } catch (error) {
-      console.warn("사용자 정보 조회 실패, 저장된 정보 사용:", error);
-      // API 실패시에도 저장된 정보로 계속 진행
-    }
-  }
 
   // 네비게이션 업데이트 - 로그인 버튼 숨기고 드롭다운 표시
   if (loginBtn) {
@@ -572,100 +688,160 @@ async function updateUIForLoggedInUser() {
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23667eea'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
   }
 
-  // 사용자 정보 표시
-  if (userInfo) {
-    userInfo.style.display = "block";
-    console.log("사용자 정보 섹션 표시됨");
-  }
+  // 구독된 사용자인 경우 사용자 정보 표시
+  if (currentUser.isSubscribed) {
+    if (userInfo) {
+      userInfo.style.display = "block";
+    }
 
-  const userNameEl = document.getElementById("userName");
-  const userEmailEl = document.getElementById("userEmail");
-  const userProfileEl = document.getElementById("userProfile");
-  const subscriptionStatusEl = document.getElementById("subscriptionStatus");
-  const selectedLanguagesEl = document.getElementById("selectedLanguages");
-  const subscriptionDateEl = document.getElementById("subscriptionDate");
+    const userNameEl = document.getElementById("userName");
+    const userEmailEl = document.getElementById("userEmail");
+    const userProfileEl = document.getElementById("userProfile");
+    const subscriptionStatusEl = document.getElementById("subscriptionStatus");
+    const selectedLanguagesEl = document.getElementById("selectedLanguages");
+    const subscriptionDateEl = document.getElementById("subscriptionDate");
 
-  if (userNameEl) {
-    userNameEl.textContent = `${currentUser.nickname}님, 안녕하세요!`;
-  }
+    if (userNameEl) {
+      userNameEl.textContent = `${currentUser.nickname}님, 안녕하세요!`;
+    }
 
-  if (userEmailEl) {
-    // 함께한 기간 계산 (subscriptionDate 기준)
-    if (currentUser.subscriptionDate) {
-      const subscriptionDate = new Date(currentUser.subscriptionDate);
-      const today = new Date();
-      const diffTime = Math.abs(today - subscriptionDate);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      userEmailEl.textContent = `함께한 지 ${diffDays}일째 🎉`;
-    } else {
-      userEmailEl.textContent = "함께한 지 1일째 🎉";
+    if (userEmailEl) {
+      if (currentUser.subscriptionDate) {
+        const subscriptionDate = new Date(currentUser.subscriptionDate);
+        const today = new Date();
+        const diffTime = Math.abs(today - subscriptionDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        userEmailEl.textContent = `함께한 지 ${diffDays}일째 🎉`;
+      } else {
+        userEmailEl.textContent = "함께한 지 1일째 🎉";
+      }
+    }
+
+    if (userProfileEl) {
+      userProfileEl.src =
+        currentUser.profileImage ||
+        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23667eea'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+    }
+
+    if (subscriptionStatusEl) {
+      subscriptionStatusEl.textContent = "✅ 활성";
+      subscriptionStatusEl.style.color = "#10b981";
+    }
+
+    if (
+      currentUser.languages &&
+      currentUser.languages.length > 0 &&
+      selectedLanguagesEl
+    ) {
+      const languageNames = {
+        english: "🇺🇸 영어",
+        chinese: "🇨🇳 중국어",
+        japanese: "🇯🇵 일본어",
+      };
+      const names = currentUser.languages
+        .map((lang) => languageNames[lang] || lang)
+        .join(", ");
+      selectedLanguagesEl.textContent = names;
+    }
+
+    if (currentUser.subscriptionDate && subscriptionDateEl) {
+      const date = new Date(currentUser.subscriptionDate);
+      subscriptionDateEl.textContent = date.toLocaleDateString("ko-KR");
+    }
+
+    // 구독 버튼 비활성화 및 텍스트 변경
+    const subscribeBtn = document.querySelector(".subscribe-btn");
+    if (subscribeBtn) {
+      subscribeBtn.innerHTML = "구독 관리에서 언어를 변경하세요";
+      subscribeBtn.classList.add("disabled");
+      subscribeBtn.onclick = () => {
+        showMessageModal("구독 관리 버튼을 통해 언어를 변경할 수 있습니다.");
+      };
+    }
+
+    // 언어 카드를 사용자의 구독 언어로 설정하고 비활성화
+    if (currentUser.languages) {
+      // 모든 카드 초기화
+      document.querySelectorAll(".language-card").forEach((card) => {
+        card.classList.remove("selected");
+        card.classList.add("disabled");
+      });
+
+      // 사용자 구독 언어만 선택 상태로 설정
+      currentUser.languages.forEach((lang) => {
+        const card = document.querySelector(`[data-language="${lang}"]`);
+        if (card) {
+          card.classList.add("selected");
+        }
+      });
+
+      // selectedLanguages 배열도 업데이트
+      selectedLanguages = [...currentUser.languages];
+      updateSubscribeButton();
     }
   }
+}
 
-  // 프로필 이미지 (기본 이미지 사용)
-  if (userProfileEl) {
-    userProfileEl.src =
-      currentUser.profileImage ||
-      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23667eea'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+// 로그아웃
+async function handleLogout() {
+  try {
+    // API에 로그아웃 요청
+    if (authSession && authSession.accessToken) {
+      await fetch(LOGIN_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "logout",
+          access_token: authSession.accessToken,
+        }),
+      });
+    }
+  } catch (error) {
+    console.error("로그아웃 API 호출 오류:", error);
   }
 
-  // 구독 정보 업데이트
-  if (subscriptionStatusEl) {
-    subscriptionStatusEl.textContent = "✅ 활성";
-    subscriptionStatusEl.style.color = "#10b981";
+  // 로컬 세션 정리
+  if (authSession) {
+    authSession.clear();
+  }
+  authSession = null;
+  currentUser = null;
+
+  // UI 초기화
+  if (loginBtn) {
+    loginBtn.style.display = "block";
+    loginBtn.textContent = "로그인";
+    loginBtn.classList.remove("btn-primary");
+    loginBtn.classList.add("btn-outline");
   }
 
-  if (
-    currentUser.languages &&
-    currentUser.languages.length > 0 &&
-    selectedLanguagesEl
-  ) {
-    const languageNames = {
-      english: "🇺🇸 영어",
-      chinese: "🇨🇳 중국어",
-      japanese: "🇯🇵 일본어",
-    };
-    const names = currentUser.languages
-      .map((lang) => languageNames[lang] || lang)
-      .join(", ");
-    selectedLanguagesEl.textContent = names;
+  // 사용자 드롭다운 숨기기
+  const userDropdown = document.getElementById("userDropdown");
+  if (userDropdown) {
+    userDropdown.style.display = "none";
+    userDropdown.classList.remove("active");
   }
 
-  if (currentUser.subscriptionDate && subscriptionDateEl) {
-    const date = new Date(currentUser.subscriptionDate);
-    subscriptionDateEl.textContent = date.toLocaleDateString("ko-KR");
+  if (userInfo) {
+    userInfo.style.display = "none";
   }
 
-  // 구독 버튼 비활성화 및 텍스트 변경
+  // 언어 카드 활성화
+  document.querySelectorAll(".language-card").forEach((card) => {
+    card.classList.remove("disabled");
+  });
+
+  // 구독 버튼 원상복구
   const subscribeBtn = document.querySelector(".subscribe-btn");
   if (subscribeBtn) {
-    subscribeBtn.innerHTML = "구독 관리에서 언어를 변경하세요";
-    subscribeBtn.classList.add("disabled");
-    subscribeBtn.onclick = () => {
-      showMessageModal("구독 관리 버튼을 통해 언어를 변경할 수 있습니다.");
-    };
-  }
-
-  // 언어 카드를 사용자의 구독 언어로 설정하고 비활성화
-  if (currentUser.languages) {
-    // 모든 카드 초기화
-    document.querySelectorAll(".language-card").forEach((card) => {
-      card.classList.remove("selected");
-      card.classList.add("disabled");
-    });
-
-    // 사용자 구독 언어만 선택 상태로 설정
-    currentUser.languages.forEach((lang) => {
-      const card = document.querySelector(`[data-language="${lang}"]`);
-      if (card) {
-        card.classList.add("selected");
-      }
-    });
-
-    // selectedLanguages 배열도 업데이트
-    selectedLanguages = [...currentUser.languages];
+    subscribeBtn.classList.remove("disabled");
+    subscribeBtn.onclick = subscribeService;
     updateSubscribeButton();
   }
+
+  showResult("로그아웃이 완료되었습니다.", "success");
 }
 
 // 구독 관리
@@ -697,48 +873,72 @@ function enableLanguageSelection() {
   }
 }
 
-// 로그아웃
-function handleLogout() {
-  localStorage.removeItem("currentUser");
-  currentUser = null;
-
-  // UI 초기화
-  if (loginBtn) {
-    loginBtn.style.display = "block";
-    loginBtn.textContent = "로그인";
-    loginBtn.classList.remove("btn-primary");
-    loginBtn.classList.add("btn-outline");
+// 구독 취소 처리
+async function handleUnsubscribe() {
+  if (!currentUser) {
+    showResult("로그인이 필요합니다.", "error");
+    return;
   }
 
-  // 사용자 드롭다운 숨기기
-  const userDropdown = document.getElementById("userDropdown");
-  if (userDropdown) {
-    userDropdown.style.display = "none";
-    userDropdown.classList.remove("active");
+  if (!confirm("정말로 구독을 취소하시겠습니까?")) {
+    return;
   }
 
-  if (userInfo) {
-    userInfo.style.display = "none";
+  try {
+    showProcessingModal("구독 취소 처리 중...");
+
+    const response = await fetch(SUBSCRIPTION_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "unsubscribe",
+        user_id: currentUser.id,
+      }),
+    });
+
+    const data = await response.json();
+    hideProcessingModal();
+
+    if (data.success) {
+      // 사용자 정보 업데이트
+      currentUser.isSubscribed = false;
+      currentUser.subscriptionStatus = "inactive";
+
+      // 세션 정보도 업데이트
+      if (authSession) {
+        authSession.userInfo = currentUser;
+        authSession.saveToStorage();
+      }
+
+      // UI 초기화
+      if (userInfo) {
+        userInfo.style.display = "none";
+      }
+
+      // 언어 카드 활성화
+      document.querySelectorAll(".language-card").forEach((card) => {
+        card.classList.remove("disabled");
+      });
+
+      // 구독 버튼 원상복구
+      const subscribeBtn = document.querySelector(".subscribe-btn");
+      if (subscribeBtn) {
+        subscribeBtn.classList.remove("disabled");
+        subscribeBtn.onclick = subscribeService;
+        updateSubscribeButton();
+      }
+
+      showResult("구독이 취소되었습니다.", "success");
+    } else {
+      showResult(data.error || "구독 취소에 실패했습니다.", "error");
+    }
+  } catch (error) {
+    console.error("구독 취소 오류:", error);
+    hideProcessingModal();
+    showResult("구독 취소 중 오류가 발생했습니다.", "error");
   }
-
-  // 언어 카드 선택 초기화
-  document.querySelectorAll(".language-card").forEach((card) => {
-    card.classList.remove("selected", "disabled");
-  });
-  document
-    .querySelector('[data-language="english"]')
-    ?.classList.add("selected");
-  selectedLanguages = ["english"];
-
-  // 구독 버튼 복원
-  const subscribeBtn = document.querySelector(".subscribe-btn");
-  if (subscribeBtn) {
-    subscribeBtn.classList.remove("disabled");
-    subscribeBtn.onclick = subscribeService;
-  }
-  updateSubscribeButton();
-
-  showResult("로그아웃되었습니다.", "info");
 }
 
 // 모달 관련
@@ -752,52 +952,6 @@ function closeLoginModal() {
   if (loginModal) {
     loginModal.style.display = "none";
   }
-}
-
-// 결과 메시지 표시
-function showResult(message, type) {
-  // 에러 타입인 경우 에러 모달 사용
-  if (type === "error") {
-    showErrorModal(message);
-    return;
-  }
-
-  // info 타입이고 "처리 중" 관련 메시지인 경우 처리중 모달 사용
-  if (
-    type === "info" &&
-    (message.includes("처리 중") ||
-      message.includes("구독 처리") ||
-      message.includes("로그인"))
-  ) {
-    showProcessingModal(message);
-    return;
-  }
-
-  // 기존 방식 유지 (success 등)
-  const result = document.getElementById("result");
-  if (result) {
-    result.textContent = message;
-    result.className = type;
-    result.style.display = "block";
-
-    // 자동 숨김
-    setTimeout(() => {
-      result.style.display = "none";
-    }, 5000);
-
-    // 메시지 위치로 스크롤
-    result.scrollIntoView({ behavior: "smooth", block: "center" });
-  }
-}
-
-// 로딩 표시
-function showLoading() {
-  showProcessingModal("처리 중...");
-}
-
-// 로딩 숨김
-function hideLoading() {
-  hideProcessingModal();
 }
 
 // API 함수들
@@ -847,109 +1001,5 @@ async function unsubscribeUser(userId) {
   } catch (error) {
     console.error("구독 취소 실패:", error);
     throw error;
-  }
-}
-
-// 구독 취소 처리
-async function handleUnsubscribe() {
-  if (!currentUser || !currentUser.user_id) {
-    showErrorModal("사용자 정보가 없습니다.");
-    return;
-  }
-
-  // 구독 취소 확인 모달 표시
-  showMessageModal(
-    "정말로 구독을 취소하시겠습니까? 더 이상 단어 알림을 받을 수 없습니다."
-  );
-
-  // 메시지 모달의 확인 버튼을 구독 취소 확인으로 변경
-  const messageModal = document.getElementById("messageModal");
-  const closeBtn = messageModal.querySelector(".message-close-btn");
-
-  // 기존 이벤트 제거
-  const newCloseBtn = closeBtn.cloneNode(true);
-  closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
-
-  newCloseBtn.textContent = "구독 취소";
-  newCloseBtn.style.background = "#e53e3e";
-  newCloseBtn.style.color = "white";
-
-  newCloseBtn.onclick = async () => {
-    closeMessageModal();
-
-    try {
-      showProcessingModal("구독 취소 중...");
-
-      await unsubscribeUser(currentUser.user_id);
-
-      hideProcessingModal();
-
-      // 로그아웃 처리
-      handleLogout();
-
-      showResult(
-        "구독이 취소되었습니다. 언제든 다시 구독할 수 있습니다.",
-        "info"
-      );
-    } catch (error) {
-      hideProcessingModal();
-
-      // 사용자 친화적 에러 메시지
-      let userMessage = "구독 취소 중 오류가 발생했습니다.";
-
-      if (error.message.includes("400")) {
-        userMessage = "잘못된 요청입니다. 다시 시도해주세요.";
-      } else if (error.message.includes("404")) {
-        userMessage = "사용자를 찾을 수 없습니다.";
-      } else if (error.message.includes("500")) {
-        userMessage =
-          "서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
-      } else if (error.message.includes("Failed to fetch")) {
-        userMessage = "인터넷 연결을 확인하고 다시 시도해주세요.";
-      }
-
-      showErrorModal(userMessage);
-    }
-  };
-
-  // 취소 버튼 추가
-  const cancelBtn = document.createElement("button");
-  cancelBtn.textContent = "취소";
-  cancelBtn.className = "message-close-btn";
-  cancelBtn.style.background = "#f3f4f6";
-  cancelBtn.style.color = "#374151";
-  cancelBtn.style.marginRight = "10px";
-  cancelBtn.onclick = () => {
-    closeMessageModal();
-    // 원래 모달로 복원
-    restoreMessageModal();
-  };
-
-  newCloseBtn.parentNode.insertBefore(cancelBtn, newCloseBtn);
-}
-
-// 메시지 모달 원래 상태로 복원
-function restoreMessageModal() {
-  const messageModal = document.getElementById("messageModal");
-  const messageContent = messageModal.querySelector(".message-content");
-
-  // 기존 버튼들 제거
-  const buttons = messageContent.querySelectorAll(".message-close-btn");
-  buttons.forEach((btn) => btn.remove());
-
-  // 원래 확인 버튼 복원
-  const confirmBtn = document.createElement("button");
-  confirmBtn.className = "message-close-btn";
-  confirmBtn.textContent = "확인";
-  confirmBtn.onclick = closeMessageModal;
-
-  messageContent.appendChild(confirmBtn);
-}
-
-// 드롭다운 토글 함수 추가
-function toggleDropdown() {
-  const userDropdown = document.getElementById("userDropdown");
-  if (userDropdown) {
-    userDropdown.classList.toggle("active");
   }
 }

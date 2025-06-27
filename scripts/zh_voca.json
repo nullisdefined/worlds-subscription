@@ -1,0 +1,964 @@
+{
+    "worlds-vocabulary": [
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_001"},
+            "word": {"S": "女人"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "那个女人很漂亮。"},
+            "example_translation": {"S": "그 여성은 아름답습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "여성"},
+            "pinyin": {"S": "nǚrén"},
+            "pronunciation": {"S": "nǚrén"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_002"},
+            "word": {"S": "男人"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "那个男人很友好。"},
+            "example_translation": {"S": "그 남성은 친절합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "남성"},
+            "pinyin": {"S": "nánrén"},
+            "pronunciation": {"S": "nánrén"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_003"},
+            "word": {"S": "家庭"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我的家庭有四个人。"},
+            "example_translation": {"S": "제 가족은 4명입니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "가족"},
+            "pinyin": {"S": "jiātíng"},
+            "pronunciation": {"S": "jiātíng"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_004"},
+            "word": {"S": "朋友"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我和朋友看电影。"},
+            "example_translation": {"S": "친구와 영화를 봅니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "친구"},
+            "pinyin": {"S": "péngyǒu"},
+            "pronunciation": {"S": "péngyǒu"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_005"},
+            "word": {"S": "动物"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "动物园里有很多动物。"},
+            "example_translation": {"S": "동물원에는 많은 동물이 있습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "동물"},
+            "pinyin": {"S": "dòngwù"},
+            "pronunciation": {"S": "dòngwù"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_006"},
+            "word": {"S": "鸟"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "天空中有鸟在飞。"},
+            "example_translation": {"S": "하늘에 새가 날고 있습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "새"},
+            "pinyin": {"S": "niǎo"},
+            "pronunciation": {"S": "niǎo"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_007"},
+            "word": {"S": "狗"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我跟狗一起散步。"},
+            "example_translation": {"S": "개와 산책합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "개"},
+            "pinyin": {"S": "gǒu"},
+            "pronunciation": {"S": "gǒu"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_008"},
+            "word": {"S": "猫"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "这只猫很可爱。"},
+            "example_translation": {"S": "이 고양이는 귀엽습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "고양이"},
+            "pinyin": {"S": "māo"},
+            "pronunciation": {"S": "māo"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_009"},
+            "word": {"S": "鱼"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我吃鱼。"},
+            "example_translation": {"S": "물고기를 먹습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "물고기"},
+            "pinyin": {"S": "yú"},
+            "pronunciation": {"S": "yú"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_010"},
+            "word": {"S": "汽车"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我买了一辆新汽车。"},
+            "example_translation": {"S": "새 차를 샀습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "자동차"},
+            "pinyin": {"S": "qìchē"},
+            "pronunciation": {"S": "qìchē"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_011"},
+            "word": {"S": "火车"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我坐火车去学校。"},
+            "example_translation": {"S": "기차를 타고 학교에 갑니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "기차"},
+            "pinyin": {"S": "huǒchē"},
+            "pronunciation": {"S": "huǒchē"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_012"},
+            "word": {"S": "飞机"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我坐飞机旅行。"},
+            "example_translation": {"S": "비행기를 타고 여행합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "비행기"},
+            "pinyin": {"S": "fēijī"},
+            "pronunciation": {"S": "fēijī"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_013"},
+            "word": {"S": "学校"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我在学校学习。"},
+            "example_translation": {"S": "학교에서 공부합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "학교"},
+            "pinyin": {"S": "xuéxiào"},
+            "pronunciation": {"S": "xuéxiào"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_014"},
+            "word": {"S": "老师"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我问老师问题。"},
+            "example_translation": {"S": "선생님께 질문합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "선생님"},
+            "pinyin": {"S": "lǎoshī"},
+            "pronunciation": {"S": "lǎoshī"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_015"},
+            "word": {"S": "学生"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "学生很多。"},
+            "example_translation": {"S": "학생이 많습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "학생"},
+            "pinyin": {"S": "xuéshēng"},
+            "pronunciation": {"S": "xuéshēng"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_016"},
+            "word": {"S": "钱"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我需要钱。"},
+            "example_translation": {"S": "돈이 필요합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "돈"},
+            "pinyin": {"S": "qián"},
+            "pronunciation": {"S": "qián"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_017"},
+            "word": {"S": "医院"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我去医院。"},
+            "example_translation": {"S": "병원에 갑니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "병원"},
+            "pinyin": {"S": "yīyuàn"},
+            "pronunciation": {"S": "yīyuàn"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_018"},
+            "word": {"S": "食物"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我喜欢中国食物。"},
+            "example_translation": {"S": "중국 음식을 좋아합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "음식"},
+            "pinyin": {"S": "shíwù"},
+            "pronunciation": {"S": "shíwù"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_019"},
+            "word": {"S": "饮料"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "有什么饮料吗？"},
+            "example_translation": {"S": "음료수가 있나요?"},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "음료"},
+            "pinyin": {"S": "yǐnliào"},
+            "pronunciation": {"S": "yǐnliào"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_020"},
+            "word": {"S": "水"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我喝水。"},
+            "example_translation": {"S": "물을 마십니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "물"},
+            "pinyin": {"S": "shuǐ"},
+            "pronunciation": {"S": "shuǐ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_021"},
+            "word": {"S": "大"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "这个房间很大。"},
+            "example_translation": {"S": "이 방은 큽니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "크다"},
+            "pinyin": {"S": "dà"},
+            "pronunciation": {"S": "dà"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_022"},
+            "word": {"S": "小"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "有一个小孩子。"},
+            "example_translation": {"S": "작은 아이가 있습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "작다"},
+            "pinyin": {"S": "xiǎo"},
+            "pronunciation": {"S": "xiǎo"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_023"},
+            "word": {"S": "高"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "这座楼很高。"},
+            "example_translation": {"S": "이 빌딩은 높습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "높다/비싸다"},
+            "pinyin": {"S": "gāo"},
+            "pronunciation": {"S": "gāo"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_024"},
+            "word": {"S": "便宜"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "这家店很便宜。"},
+            "example_translation": {"S": "이 가게는 쌉니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "싸다"},
+            "pinyin": {"S": "piányí"},
+            "pronunciation": {"S": "piányí"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_025"},
+            "word": {"S": "新"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我买了一本新书。"},
+            "example_translation": {"S": "새 책을 샀습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "새롭다"},
+            "pinyin": {"S": "xīn"},
+            "pronunciation": {"S": "xīn"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_026"},
+            "word": {"S": "旧"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我住在旧房子里。"},
+            "example_translation": {"S": "오래된 집에 살고 있습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "오래되다"},
+            "pinyin": {"S": "jiù"},
+            "pronunciation": {"S": "jiù"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_027"},
+            "word": {"S": "好"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "天气很好。"},
+            "example_translation": {"S": "날씨가 좋습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "좋다"},
+            "pinyin": {"S": "hǎo"},
+            "pronunciation": {"S": "hǎo"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_028"},
+            "word": {"S": "坏"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "今天心情不好。"},
+            "example_translation": {"S": "오늘은 기분이 나쁩니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "나쁘다"},
+            "pinyin": {"S": "huài"},
+            "pronunciation": {"S": "huài"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_029"},
+            "word": {"S": "白"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "天空中有白云。"},
+            "example_translation": {"S": "하늘에 하얀 구름이 있습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "하얗다"},
+            "pinyin": {"S": "bái"},
+            "pronunciation": {"S": "bái"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_030"},
+            "word": {"S": "黑"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "有一只黑猫在走路。"},
+            "example_translation": {"S": "검은 고양이가 걷고 있습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "검다"},
+            "pinyin": {"S": "hēi"},
+            "pronunciation": {"S": "hēi"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_031"},
+            "word": {"S": "红"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "红花很漂亮。"},
+            "example_translation": {"S": "빨간 꽃이 예쁩니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "빨갛다"},
+            "pinyin": {"S": "hóng"},
+            "pronunciation": {"S": "hóng"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_032"},
+            "word": {"S": "蓝"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "蓝色的海很美。"},
+            "example_translation": {"S": "파란 바다가 아름답습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "파랗다"},
+            "pinyin": {"S": "lán"},
+            "pronunciation": {"S": "lán"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_033"},
+            "word": {"S": "看"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我看电视。"},
+            "example_translation": {"S": "텔레비전을 봅니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "보다"},
+            "pinyin": {"S": "kàn"},
+            "pronunciation": {"S": "kàn"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_034"},
+            "word": {"S": "听"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我听音乐。"},
+            "example_translation": {"S": "음악을 듣습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "듣다"},
+            "pinyin": {"S": "tīng"},
+            "pronunciation": {"S": "tīng"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_035"},
+            "word": {"S": "说"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我说中文。"},
+            "example_translation": {"S": "중국어를 말합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "말하다"},
+            "pinyin": {"S": "shuō"},
+            "pronunciation": {"S": "shuō"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_036"},
+            "word": {"S": "吃"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我吃米饭。"},
+            "example_translation": {"S": "밥을 먹습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "먹다"},
+            "pinyin": {"S": "chī"},
+            "pronunciation": {"S": "chī"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_037"},
+            "word": {"S": "喝"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我喝咖啡。"},
+            "example_translation": {"S": "커피를 마십니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "마시다"},
+            "pinyin": {"S": "hē"},
+            "pronunciation": {"S": "hē"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_038"},
+            "word": {"S": "去"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我去北京。"},
+            "example_translation": {"S": "베이징에 갑니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "가다"},
+            "pinyin": {"S": "qù"},
+            "pronunciation": {"S": "qù"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_039"},
+            "word": {"S": "来"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "朋友来我家。"},
+            "example_translation": {"S": "친구가 우리 집에 옵니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "오다"},
+            "pinyin": {"S": "lái"},
+            "pronunciation": {"S": "lái"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_040"},
+            "word": {"S": "回"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我回家。"},
+            "example_translation": {"S": "집에 돌아갑니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "돌아가다"},
+            "pinyin": {"S": "huí"},
+            "pronunciation": {"S": "huí"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_041"},
+            "word": {"S": "买"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我买面包。"},
+            "example_translation": {"S": "빵을 삽니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "사다"},
+            "pinyin": {"S": "mǎi"},
+            "pronunciation": {"S": "mǎi"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_042"},
+            "word": {"S": "卖"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我卖书。"},
+            "example_translation": {"S": "책을 팝니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "팔다"},
+            "pinyin": {"S": "mài"},
+            "pronunciation": {"S": "mài"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_043"},
+            "word": {"S": "读"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我读报纸。"},
+            "example_translation": {"S": "신문을 읽습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "읽다"},
+            "pinyin": {"S": "dú"},
+            "pronunciation": {"S": "dú"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_044"},
+            "word": {"S": "写"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我写信。"},
+            "example_translation": {"S": "편지를 씁니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "쓰다"},
+            "pinyin": {"S": "xiě"},
+            "pronunciation": {"S": "xiě"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_045"},
+            "word": {"S": "水果"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我喜欢水果。"},
+            "example_translation": {"S": "과일을 좋아합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "과일"},
+            "pinyin": {"S": "shuǐguǒ"},
+            "pronunciation": {"S": "shuǐguǒ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_046"},
+            "word": {"S": "蔬菜"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "我吃蔬菜。"},
+            "example_translation": {"S": "야채를 먹습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "야채"},
+            "pinyin": {"S": "shūcài"},
+            "pronunciation": {"S": "shūcài"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_047"},
+            "word": {"S": "天气"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "今天天气很好。"},
+            "example_translation": {"S": "오늘 날씨가 좋습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "날씨"},
+            "pinyin": {"S": "tiānqì"},
+            "pronunciation": {"S": "tiānqì"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_048"},
+            "word": {"S": "自行车"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "我骑自行车去公园。"},
+            "example_translation": {"S": "자전거를 타고 공원에 갑니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "자전거"},
+            "pinyin": {"S": "zìxíngchē"},
+            "pronunciation": {"S": "zìxíngchē"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_049"},
+            "word": {"S": "电脑"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "我用电脑工作。"},
+            "example_translation": {"S": "컴퓨터로 일을 합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "컴퓨터"},
+            "pinyin": {"S": "diànnǎo"},
+            "pronunciation": {"S": "diànnǎo"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_050"},
+            "word": {"S": "旅行"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "下个月我去旅行。"},
+            "example_translation": {"S": "다음 달에 여행을 갑니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "여행"},
+            "pinyin": {"S": "lǚxíng"},
+            "pronunciation": {"S": "lǚxíng"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_051"},
+            "word": {"S": "快乐"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "聚会很快乐。"},
+            "example_translation": {"S": "파티가 즐겁습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "즐겁다"},
+            "pinyin": {"S": "kuàilè"},
+            "pronunciation": {"S": "kuàilè"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_052"},
+            "word": {"S": "困难"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "这个问题很困难。"},
+            "example_translation": {"S": "이 문제는 어렵습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "어렵다"},
+            "pinyin": {"S": "kùnnán"},
+            "pronunciation": {"S": "kùnnán"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_053"},
+            "word": {"S": "学习"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "我每天学习中文。"},
+            "example_translation": {"S": "매일 중국어를 공부합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "공부하다"},
+            "pinyin": {"S": "xuéxí"},
+            "pronunciation": {"S": "xuéxí"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_054"},
+            "word": {"S": "植物"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "我种植物。"},
+            "example_translation": {"S": "식물을 기릅니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "식물"},
+            "pinyin": {"S": "zhíwù"},
+            "pronunciation": {"S": "zhíwù"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_055"},
+            "word": {"S": "季节"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "春天是我喜欢的季节。"},
+            "example_translation": {"S": "봄은 제가 좋아하는 계절입니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "계절"},
+            "pinyin": {"S": "jìjié"},
+            "pronunciation": {"S": "jìjié"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_056"},
+            "word": {"S": "忙"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "这周我很忙。"},
+            "example_translation": {"S": "이번 주는 매우 바쁩니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "바쁘다"},
+            "pinyin": {"S": "máng"},
+            "pronunciation": {"S": "máng"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_057"},
+            "word": {"S": "尴尬"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "在大家面前说话很尴尬。"},
+            "example_translation": {"S": "사람들 앞에서 말하는 것은 부끄럽습니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "부끄럽다"},
+            "pinyin": {"S": "gāngà"},
+            "pronunciation": {"S": "gāngà"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_058"},
+            "word": {"S": "确认"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "请确认时间。"},
+            "example_translation": {"S": "시간을 확인해 주세요."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "확인하다"},
+            "pinyin": {"S": "quèrèn"},
+            "pronunciation": {"S": "quèrèn"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_059"},
+            "word": {"S": "期待"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "我期待好结果。"},
+            "example_translation": {"S": "좋은 결과를 기대합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "기대하다"},
+            "pinyin": {"S": "qīdài"},
+            "pronunciation": {"S": "qīdài"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "ch_060"},
+            "word": {"S": "满意"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "我对结果很满意。"},
+            "example_translation": {"S": "결과에 만족합니다."},
+            "hiragana": {"S": ""},
+            "language": {"S": "chinese"},
+            "meaning": {"S": "만족하다"},
+            "pinyin": {"S": "mǎnyì"},
+            "pronunciation": {"S": "mǎnyì"}
+          }
+        }
+      }
+    ]
+  }

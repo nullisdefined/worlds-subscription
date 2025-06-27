@@ -1,0 +1,1284 @@
+{
+    "worlds-vocabulary": [
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_001"},
+            "word": {"S": "女性"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "あの女性は美しいです。"},
+            "example_translation": {"S": "그 여성은 아름답습니다."},
+            "hiragana": {"S": "じょせい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "여성"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "じょせい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_002"},
+            "word": {"S": "男性"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "その男性は親切です。"},
+            "example_translation": {"S": "그 남성은 친절합니다."},
+            "hiragana": {"S": "だんせい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "남성"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "だんせい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_003"},
+            "word": {"S": "家族"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "私の家族は4人です。"},
+            "example_translation": {"S": "제 가족은 4명입니다."},
+            "hiragana": {"S": "かぞく"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "가족"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "かぞく"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_004"},
+            "word": {"S": "友達"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "友達と映画を見ました。"},
+            "example_translation": {"S": "친구와 영화를 봤습니다."},
+            "hiragana": {"S": "ともだち"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "친구"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "ともだち"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_005"},
+            "word": {"S": "動物"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "動物園でいろいろな動物を見ました。"},
+            "example_translation": {"S": "동물원에서 여러 동물을 봤습니다."},
+            "hiragana": {"S": "どうぶつ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "동물"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "どうぶつ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_006"},
+            "word": {"S": "鳥"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "空に鳥が飛んでいます。"},
+            "example_translation": {"S": "하늘에 새가 날고 있습니다."},
+            "hiragana": {"S": "とり"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "새"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "とり"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_007"},
+            "word": {"S": "犬"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "犬と散歩します。"},
+            "example_translation": {"S": "개와 산책합니다."},
+            "hiragana": {"S": "いぬ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "개"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "いぬ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_008"},
+            "word": {"S": "猫"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "猫がかわいいです。"},
+            "example_translation": {"S": "고양이가 귀엽습니다."},
+            "hiragana": {"S": "ねこ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "고양이"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "ねこ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_009"},
+            "word": {"S": "魚"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "魚を食べます。"},
+            "example_translation": {"S": "물고기를 먹습니다."},
+            "hiragana": {"S": "さかな"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "물고기"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "さかな"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_010"},
+            "word": {"S": "車"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "新しい車を買いました。"},
+            "example_translation": {"S": "새 차를 샀습니다."},
+            "hiragana": {"S": "くるま"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "자동차"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "くるま"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_011"},
+            "word": {"S": "電車"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "電車で学校に行きます。"},
+            "example_translation": {"S": "전차로 학교에 갑니다."},
+            "hiragana": {"S": "でんしゃ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "전차"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "でんしゃ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_012"},
+            "word": {"S": "飛行機"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "飛行機で旅行します。"},
+            "example_translation": {"S": "비행기로 여행합니다."},
+            "hiragana": {"S": "ひこうき"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "비행기"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "ひこうき"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_013"},
+            "word": {"S": "学校"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "学校で勉強します。"},
+            "example_translation": {"S": "학교에서 공부합니다."},
+            "hiragana": {"S": "がっこう"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "학교"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "がっこう"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_014"},
+            "word": {"S": "先生"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "先生に質問します。"},
+            "example_translation": {"S": "선생님께 질문합니다."},
+            "hiragana": {"S": "せんせい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "선생님"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "せんせい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_015"},
+            "word": {"S": "学生"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "学生が多いです。"},
+            "example_translation": {"S": "학생이 많습니다."},
+            "hiragana": {"S": "がくせい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "학생"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "がくせい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_016"},
+            "word": {"S": "お金"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "お金が必要です。"},
+            "example_translation": {"S": "돈이 필요합니다."},
+            "hiragana": {"S": "おかね"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "돈"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "おかね"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_017"},
+            "word": {"S": "病院"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "病院に行きます。"},
+            "example_translation": {"S": "병원에 갑니다."},
+            "hiragana": {"S": "びょういん"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "병원"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "びょういん"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_018"},
+            "word": {"S": "食べ物"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "日本の食べ物が好きです。"},
+            "example_translation": {"S": "일본 음식을 좋아합니다."},
+            "hiragana": {"S": "たべもの"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "음식"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "たべもの"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_019"},
+            "word": {"S": "飲み物"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "何か飲み物はありますか。"},
+            "example_translation": {"S": "뭔가 음료수 있나요?"},
+            "hiragana": {"S": "のみもの"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "음료"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "のみもの"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_020"},
+            "word": {"S": "水"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "水を飲みます。"},
+            "example_translation": {"S": "물을 마십니다."},
+            "hiragana": {"S": "みず"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "물"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "みず"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_021"},
+            "word": {"S": "大きい"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "この部屋は大きいです。"},
+            "example_translation": {"S": "이 방은 큽니다."},
+            "hiragana": {"S": "おおきい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "크다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "おおきい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_022"},
+            "word": {"S": "小さい"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "小さい子供がいます。"},
+            "example_translation": {"S": "작은 아이가 있습니다."},
+            "hiragana": {"S": "ちいさい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "작다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "ちいさい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_023"},
+            "word": {"S": "高い"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "このビルは高いです。"},
+            "example_translation": {"S": "이 빌딩은 높습니다."},
+            "hiragana": {"S": "たかい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "높다/비싸다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "たかい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_024"},
+            "word": {"S": "安い"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "この店は安いです。"},
+            "example_translation": {"S": "이 가게는 쌉니다."},
+            "hiragana": {"S": "やすい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "싸다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "やすい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_025"},
+            "word": {"S": "新しい"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "新しい本を買いました。"},
+            "example_translation": {"S": "새 책을 샀습니다."},
+            "hiragana": {"S": "あたらしい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "새롭다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "あたらしい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_026"},
+            "word": {"S": "古い"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "古い家に住んでいます。"},
+            "example_translation": {"S": "오래된 집에 살고 있습니다."},
+            "hiragana": {"S": "ふるい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "오래되다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "ふるい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_027"},
+            "word": {"S": "良い"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "天気が良いです。"},
+            "example_translation": {"S": "날씨가 좋습니다."},
+            "hiragana": {"S": "よい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "좋다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "よい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_028"},
+            "word": {"S": "悪い"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "今日は気分が悪いです。"},
+            "example_translation": {"S": "오늘은 기분이 나쁩니다."},
+            "hiragana": {"S": "わるい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "나쁘다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "わるい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_029"},
+            "word": {"S": "白い"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "白い雲が空にあります。"},
+            "example_translation": {"S": "하얀 구름이 하늘에 있습니다."},
+            "hiragana": {"S": "しろい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "하얗다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "しろい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_030"},
+            "word": {"S": "黒い"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "黒い猫が歩いています。"},
+            "example_translation": {"S": "검은 고양이가 걷고 있습니다."},
+            "hiragana": {"S": "くろい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "검다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "くろい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_031"},
+            "word": {"S": "赤い"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "赤い花がきれいです。"},
+            "example_translation": {"S": "빨간 꽃이 예쁩니다."},
+            "hiragana": {"S": "あかい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "빨갛다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "あかい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_032"},
+            "word": {"S": "青い"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "青い海が美しいです。"},
+            "example_translation": {"S": "파란 바다가 아름답습니다."},
+            "hiragana": {"S": "あおい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "파랗다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "あおい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_033"},
+            "word": {"S": "見る"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "テレビを見ます。"},
+            "example_translation": {"S": "텔레비전을 봅니다."},
+            "hiragana": {"S": "みる"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "보다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "みる"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_034"},
+            "word": {"S": "聞く"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "音楽を聞きます。"},
+            "example_translation": {"S": "음악을 듣습니다."},
+            "hiragana": {"S": "きく"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "듣다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "きく"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_035"},
+            "word": {"S": "話す"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "日本語を話します。"},
+            "example_translation": {"S": "일본어를 말합니다."},
+            "hiragana": {"S": "はなす"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "말하다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "はなす"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_036"},
+            "word": {"S": "食べる"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "ご飯を食べます。"},
+            "example_translation": {"S": "밥을 먹습니다."},
+            "hiragana": {"S": "たべる"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "먹다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "たべる"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_037"},
+            "word": {"S": "飲む"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "コーヒーを飲みます。"},
+            "example_translation": {"S": "커피를 마십니다."},
+            "hiragana": {"S": "のむ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "마시다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "のむ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_038"},
+            "word": {"S": "行く"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "東京に行きます。"},
+            "example_translation": {"S": "도쿄에 갑니다."},
+            "hiragana": {"S": "いく"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "가다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "いく"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_039"},
+            "word": {"S": "来る"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "友達が家に来ます。"},
+            "example_translation": {"S": "친구가 집에 옵니다."},
+            "hiragana": {"S": "くる"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "오다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "くる"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_040"},
+            "word": {"S": "帰る"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "家に帰ります。"},
+            "example_translation": {"S": "집에 돌아갑니다."},
+            "hiragana": {"S": "かえる"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "돌아가다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "かえる"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_041"},
+            "word": {"S": "買う"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "パンを買います。"},
+            "example_translation": {"S": "빵을 삽니다."},
+            "hiragana": {"S": "かう"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "사다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "かう"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_042"},
+            "word": {"S": "売る"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "本を売ります。"},
+            "example_translation": {"S": "책을 팝니다."},
+            "hiragana": {"S": "うる"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "팔다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "うる"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_043"},
+            "word": {"S": "読む"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "新聞を読みます。"},
+            "example_translation": {"S": "신문을 읽습니다."},
+            "hiragana": {"S": "よむ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "읽다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "よむ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_044"},
+            "word": {"S": "書く"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "手紙を書きます。"},
+            "example_translation": {"S": "편지를 씁니다."},
+            "hiragana": {"S": "かく"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "쓰다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "かく"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_045"},
+            "word": {"S": "果物"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "果物が好きです。"},
+            "example_translation": {"S": "과일을 좋아합니다."},
+            "hiragana": {"S": "くだもの"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "과일"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "くだもの"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_046"},
+            "word": {"S": "野菜"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "野菜を食べます。"},
+            "example_translation": {"S": "야채를 먹습니다."},
+            "hiragana": {"S": "やさい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "야채"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "やさい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_047"},
+            "word": {"S": "天気"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "今日の天気はいいです。"},
+            "example_translation": {"S": "오늘 날씨가 좋습니다."},
+            "hiragana": {"S": "てんき"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "날씨"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "てんき"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_048"},
+            "word": {"S": "自転車"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "自転車で公園に行きます。"},
+            "example_translation": {"S": "자전거로 공원에 갑니다."},
+            "hiragana": {"S": "じてんしゃ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "자전거"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "じてんしゃ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_049"},
+            "word": {"S": "コンピューター"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "コンピューターで仕事をします。"},
+            "example_translation": {"S": "컴퓨터로 일을 합니다."},
+            "hiragana": {"S": "こんぴゅーたー"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "컴퓨터"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "こんぴゅーたー"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_050"},
+            "word": {"S": "旅行"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "来月、旅行に行きます。"},
+            "example_translation": {"S": "다음 달에 여행을 갑니다."},
+            "hiragana": {"S": "りょこう"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "여행"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "りょこう"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_051"},
+            "word": {"S": "楽しい"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "パーティーが楽しいです。"},
+            "example_translation": {"S": "파티가 즐겁습니다."},
+            "hiragana": {"S": "たのしい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "즐겁다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "たのしい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_052"},
+            "word": {"S": "難しい"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "この問題は難しいです。"},
+            "example_translation": {"S": "이 문제는 어렵습니다."},
+            "hiragana": {"S": "むずかしい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "어렵다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "むずかしい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_053"},
+            "word": {"S": "勉強する"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "毎日日本語を勉強します。"},
+            "example_translation": {"S": "매일 일본어를 공부합니다."},
+            "hiragana": {"S": "べんきょうする"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "공부하다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "べんきょうする"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_054"},
+            "word": {"S": "植物"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "植物を育てています。"},
+            "example_translation": {"S": "식물을 기르고 있습니다."},
+            "hiragana": {"S": "しょくぶつ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "식물"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "しょくぶつ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_055"},
+            "word": {"S": "季節"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "春は好きな季節です。"},
+            "example_translation": {"S": "봄은 좋아하는 계절입니다."},
+            "hiragana": {"S": "きせつ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "계절"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "きせつ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_056"},
+            "word": {"S": "忙しい"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "今週はとても忙しいです。"},
+            "example_translation": {"S": "이번 주는 매우 바쁩니다."},
+            "hiragana": {"S": "いそがしい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "바쁘다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "いそがしい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_057"},
+            "word": {"S": "恥ずかしい"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "人前で話すのは恥ずかしいです。"},
+            "example_translation": {"S": "사람들 앞에서 말하는 것은 부끄럽습니다."},
+            "hiragana": {"S": "はずかしい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "부끄럽다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "はずかしい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_058"},
+            "word": {"S": "確認する"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "時間を確認してください。"},
+            "example_translation": {"S": "시간을 확인해 주세요."},
+            "hiragana": {"S": "かくにんする"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "확인하다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "かくにんする"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_059"},
+            "word": {"S": "期待する"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "良い結果を期待しています。"},
+            "example_translation": {"S": "좋은 결과를 기대하고 있습니다."},
+            "hiragana": {"S": "きたいする"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "기대하다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "きたいする"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_060"},
+            "word": {"S": "満足する"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "結果に満足しています。"},
+            "example_translation": {"S": "결과에 만족하고 있습니다."},
+            "hiragana": {"S": "まんぞくする"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "만족하다"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "まんぞくする"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_061"},
+            "word": {"S": "法律"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "法律を勉強しています。"},
+            "example_translation": {"S": "법률을 공부하고 있습니다."},
+            "hiragana": {"S": "ほうりつ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "법률"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "ほうりつ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_062"},
+            "word": {"S": "権利"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "すべての人に権利があります。"},
+            "example_translation": {"S": "모든 사람에게 권리가 있습니다."},
+            "hiragana": {"S": "けんり"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "권리"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "けんり"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_063"},
+            "word": {"S": "義務"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "市民の義務を果たします。"},
+            "example_translation": {"S": "시민의 의무를 다합니다."},
+            "hiragana": {"S": "ぎむ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "의무"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "ぎむ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_064"},
+            "word": {"S": "責任"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "責任を持って行動します。"},
+            "example_translation": {"S": "책임을 지고 행동합니다."},
+            "hiragana": {"S": "せきにん"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "책임"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "せきにん"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_065"},
+            "word": {"S": "安全"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "安全第一です。"},
+            "example_translation": {"S": "안전이 제일입니다."},
+            "hiragana": {"S": "あんぜん"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "안전"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "あんぜん"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_066"},
+            "word": {"S": "危険"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "危険ですから気をつけてください。"},
+            "example_translation": {"S": "위험하니까 조심하세요."},
+            "hiragana": {"S": "きけん"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "위험"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "きけん"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_067"},
+            "word": {"S": "平和"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "世界平和を願います。"},
+            "example_translation": {"S": "세계 평화를 바랍니다."},
+            "hiragana": {"S": "へいわ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "평화"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "へいわ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_068"},
+            "word": {"S": "戦争"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "戦争は悲しいことです。"},
+            "example_translation": {"S": "전쟁은 슬픈 일입니다."},
+            "hiragana": {"S": "せんそう"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "전쟁"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "せんそう"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_069"},
+            "word": {"S": "自由"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "自由に選んでください。"},
+            "example_translation": {"S": "자유롭게 선택하세요."},
+            "hiragana": {"S": "じゆう"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "자유"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "じゆう"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_070"},
+            "word": {"S": "平等"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "男女平等が大切です。"},
+            "example_translation": {"S": "남녀평등이 중요합니다."},
+            "hiragana": {"S": "びょうどう"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "평등"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "びょうどう"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_071"},
+            "word": {"S": "文化"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "日本の文化を学びます。"},
+            "example_translation": {"S": "일본 문화를 배웁니다."},
+            "hiragana": {"S": "ぶんか"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "문화"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "ぶんか"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_072"},
+            "word": {"S": "伝統"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "日本の伝統を大切にします。"},
+            "example_translation": {"S": "일본의 전통을 소중히 합니다."},
+            "hiragana": {"S": "でんとう"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "전통"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "でんとう"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_073"},
+            "word": {"S": "習慣"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "早起きの習慣があります。"},
+            "example_translation": {"S": "일찍 일어나는 습관이 있습니다."},
+            "hiragana": {"S": "しゅうかん"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "습관"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "しゅうかん"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_074"},
+            "word": {"S": "マナー"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "マナーを守りましょう。"},
+            "example_translation": {"S": "매너를 지킵시다."},
+            "hiragana": {"S": "まなー"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "매너"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "まなー"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_075"},
+            "word": {"S": "礼儀"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "礼儀正しい人です。"},
+            "example_translation": {"S": "예의 바른 사람입니다."},
+            "hiragana": {"S": "れいぎ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "예의"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "れいぎ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_076"},
+            "word": {"S": "挨拶"},
+            "difficulty": {"S": "basic"},
+            "example": {"S": "毎朝挨拶をします。"},
+            "example_translation": {"S": "매일 아침 인사를 합니다."},
+            "hiragana": {"S": "あいさつ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "인사"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "あいさつ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_077"},
+            "word": {"S": "感謝"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "感謝の気持ちを伝えます。"},
+            "example_translation": {"S": "감사의 마음을 전합니다."},
+            "hiragana": {"S": "かんしゃ"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "감사"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "かんしゃ"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_078"},
+            "word": {"S": "謝罪"},
+            "difficulty": {"S": "advanced"},
+            "example": {"S": "謝罪いたします。"},
+            "example_translation": {"S": "사과드립니다."},
+            "hiragana": {"S": "しゃざい"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "사과"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "しゃざい"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_079"},
+            "word": {"S": "許可"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "許可をもらいました。"},
+            "example_translation": {"S": "허가를 받았습니다."},
+            "hiragana": {"S": "きょか"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "허가"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "きょか"}
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "word_id": {"S": "jp_080"},
+            "word": {"S": "禁止"},
+            "difficulty": {"S": "intermediate"},
+            "example": {"S": "ここは駐車禁止です。"},
+            "example_translation": {"S": "여기는 주차 금지입니다."},
+            "hiragana": {"S": "きんし"},
+            "language": {"S": "japanese"},
+            "meaning": {"S": "금지"},
+            "pinyin": {"S": ""},
+            "pronunciation": {"S": "きんし"}
+          }
+        }
+      }
+    ]
+  }
