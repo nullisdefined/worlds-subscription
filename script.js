@@ -20,7 +20,7 @@ if (isLocalhost || isFileProtocol) {
     window.ENV?.API_BASE_URL ||
     "https://vpmjzf8rn8.execute-api.ap-northeast-2.amazonaws.com/prod";
   API_URL = API_BASE_URL + "/subscribe";
-  REDIRECT_URI = window.location.origin + "/words-subscription/";
+  REDIRECT_URI = window.location.origin + "/worlds-subscription/";
   //   console.log("Production Environment");
 }
 
@@ -58,8 +58,20 @@ function setupEventListeners() {
   if (closeModal) closeModal.addEventListener("click", closeLoginModal);
   if (logoutBtn) logoutBtn.addEventListener("click", handleLogout);
 
+  // 사용자 메뉴 버튼 클릭 이벤트 추가
+  const userMenuBtn = document.getElementById("userMenuBtn");
+  if (userMenuBtn) {
+    userMenuBtn.addEventListener("click", toggleDropdown);
+  }
+
   // 모달 배경 클릭 시 닫기
   window.addEventListener("click", (e) => {
+    const userDropdown = document.getElementById("userDropdown");
+    // 드롭다운 외부 클릭 시 닫기
+    if (userDropdown && !userDropdown.contains(e.target)) {
+      userDropdown.classList.remove("active");
+    }
+
     if (e.target === loginModal) {
       closeLoginModal();
     }
@@ -459,12 +471,7 @@ function handleSubscriptionCallback(authCode) {
         sessionStorage.removeItem("selectedLanguages");
         sessionStorage.removeItem("kakao_state");
 
-        // 사용자 정보 섹션으로 스크롤
-        setTimeout(() => {
-          if (userInfo) {
-            userInfo.scrollIntoView({ behavior: "smooth" });
-          }
-        }, 1000);
+        // 구독 성공 시 메시지만 표시
       } else {
         // 서버에서 받은 에러 메시지를 사용자 친화적으로 변환
         let errorMessage = "구독 처리에 실패했습니다.";
@@ -541,21 +548,28 @@ async function updateUIForLoggedInUser() {
     }
   }
 
-  // 네비게이션 업데이트 - 로그인 버튼을 닉네임으로 변경
+  // 네비게이션 업데이트 - 로그인 버튼 숨기고 드롭다운 표시
   if (loginBtn) {
-    loginBtn.textContent = `${currentUser.nickname}님`;
-    loginBtn.classList.remove("btn-outline");
-    loginBtn.classList.add("btn-primary");
-    // 기존 이벤트 리스너 제거
-    loginBtn.removeEventListener("click", openLoginModal);
-    // 새로운 이벤트 리스너 추가
-    loginBtn.onclick = (e) => {
-      e.preventDefault();
-      const userInfoSection = document.getElementById("userInfo");
-      if (userInfoSection) {
-        userInfoSection.scrollIntoView({ behavior: "smooth" });
-      }
-    };
+    loginBtn.style.display = "none";
+  }
+
+  // 사용자 드롭다운 표시
+  const userDropdown = document.getElementById("userDropdown");
+  const userNickname = document.getElementById("userNickname");
+  const userAvatar = document.getElementById("userAvatar");
+
+  if (userDropdown) {
+    userDropdown.style.display = "block";
+  }
+
+  if (userNickname) {
+    userNickname.textContent = `${currentUser.nickname}님`;
+  }
+
+  if (userAvatar) {
+    userAvatar.src =
+      currentUser.profileImage ||
+      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23667eea'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
   }
 
   // 사용자 정보 표시
@@ -690,13 +704,19 @@ function handleLogout() {
 
   // UI 초기화
   if (loginBtn) {
+    loginBtn.style.display = "block";
     loginBtn.textContent = "로그인";
     loginBtn.classList.remove("btn-primary");
     loginBtn.classList.add("btn-outline");
-    // 기존 onclick 제거하고 이벤트 리스너로 다시 설정
-    loginBtn.onclick = null;
-    loginBtn.addEventListener("click", openLoginModal);
   }
+
+  // 사용자 드롭다운 숨기기
+  const userDropdown = document.getElementById("userDropdown");
+  if (userDropdown) {
+    userDropdown.style.display = "none";
+    userDropdown.classList.remove("active");
+  }
+
   if (userInfo) {
     userInfo.style.display = "none";
   }
@@ -924,4 +944,12 @@ function restoreMessageModal() {
   confirmBtn.onclick = closeMessageModal;
 
   messageContent.appendChild(confirmBtn);
+}
+
+// 드롭다운 토글 함수 추가
+function toggleDropdown() {
+  const userDropdown = document.getElementById("userDropdown");
+  if (userDropdown) {
+    userDropdown.classList.toggle("active");
+  }
 }
